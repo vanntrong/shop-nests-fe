@@ -12,12 +12,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Stop and remove old image
-      run: docker stop shop-nextjs || true && docker rm -f shop-nextjs || true && docker image rm -f nextjs || true
+      run: |
+           sudo docker stop shop-nextjs || true
+           sudo docker rm -f shop-nextjs || true
+           sudo docker image rm -f nextjs || true
 
     - name: Build Docker image
-      run: docker build -t nextjs .
+      run: sudo docker build -t nextjs .
 
     - name: Run the Docker image
-      run: docker run -d -p 80:80 --name shop-nextjs nextjs
+      run: sudo docker run -d -p 80:80 --name shop-nextjs nextjs
 
 
