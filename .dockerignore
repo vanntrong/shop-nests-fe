@@ -21,6 +21,7 @@ app.pid
 # environment files
 .env*
 *.env
+.env.example
 
 # storybook
 .storybook
