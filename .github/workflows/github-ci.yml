@@ -6,8 +6,32 @@ on:
 
 jobs:
 
+  prepare:
+    name: Prepare enviroment
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: DerYeger/yarn-setup-action@master
+      with:
+        node-version: 16
+
+  unit-testing:
+    name: Unit Testing
+    runs-on: ubuntu-latest
+    needs: prepare
+
+    steps:
+    - name: Use yarn install
+    - uses: DerYeger/yarn-setup-action@master
+      with:
+        node-version: 16
+    - run: yarn test
+
+
   build-and-run-image:
+    name: Build Docker Image and Run on VPS
     runs-on: self-hosted
+    needs: [prepare, unit-testing]
 
     steps:
     - uses: actions/checkout@v3
