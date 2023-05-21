@@ -3,7 +3,7 @@ FROM node:16.18.0-alpine3.16 AS deps
 WORKDIR /app
 
 COPY package.json yarn.lock ./
-RUN  npm install
+RUN  yarn install --production --ignore-scripts
 
 FROM node:16.18.0-alpine3.16 AS builder
 WORKDIR /app
@@ -12,7 +12,7 @@ COPY . .
 
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN npm run build
+RUN yarn build
 
 FROM node:16.18.0-alpine3.16 AS runner
 WORKDIR /app
