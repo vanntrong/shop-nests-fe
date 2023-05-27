@@ -7,7 +7,7 @@ interface IProductCardProps extends ComponentProps<"div"> {
   product: any;
 }
 
-const ProductCard: FC<IProductCardProps> = ({ product, ...props }) => {
+const ProductCard: FC<IProductCardProps> = ({ ...props }) => {
   return (
     <div className="product-card-shadow border border-gray-200 bg-white" {...props}>
       <div className={"relative h-[171px] w-full"}>
