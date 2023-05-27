@@ -1,7 +1,14 @@
-import React from "react";
+import clsx from "clsx";
+import React, { FC, ButtonHTMLAttributes } from "react";
 
-const Button = () => {
-  return <button className="p-4 pt-2">Button</button>;
+type TButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
+
+const Button: FC<TButtonProps> = ({ children, className, ...props }) => {
+  return (
+    <button className={clsx(className)} {...props}>
+      {children}
+    </button>
+  );
 };
 
 export default Button;
