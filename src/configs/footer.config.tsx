@@ -7,7 +7,7 @@ export const FOOTER_BACKGROUND_IMAGE = "/footer-bg.jpeg";
 export const CONTACTS = [
   {
     type: "phone",
-    value: "tel:0123456789",
+    value: "tel:01234567891",
   },
   {
     type: "phone",

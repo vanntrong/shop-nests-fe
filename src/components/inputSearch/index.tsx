@@ -9,18 +9,24 @@ interface IInputSearchProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const InputSearch = forwardRef<HTMLInputElement, IInputSearchProps>(({ ...props }, ref) => {
   return (
-    <div className="flex items-center rounded-3xl border-[1px] border-white px-4 py-2">
-      <input
-        type="text"
-        ref={ref}
-        {...props}
-        className="h-full w-full bg-transparent text-sm text-gray-200 outline-none placeholder:text-gray-200"
-      />
-
-      <Button>
+    <>
+      <Button className="mr-3 flex h-8 w-8 items-center justify-center rounded-lg border-[1px] border-white px-0 py-0 lg:hidden">
         <BsSearch color="white" />
       </Button>
-    </div>
+
+      <div className="hidden items-center rounded-3xl border-[1px] border-white px-4 py-2 lg:flex">
+        <input
+          type="text"
+          ref={ref}
+          {...props}
+          className="h-full w-full bg-transparent text-sm text-gray-200 outline-none placeholder:text-gray-200"
+        />
+
+        <Button>
+          <BsSearch color="white" />
+        </Button>
+      </div>
+    </>
   );
 });
 

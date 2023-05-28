@@ -19,9 +19,10 @@ const ButtonVariant: FC<IButtonVariantProps> = ({
   return (
     <Button
       className={clsx(
-        "flex-center h-[45px] w-[110px] bg-no-repeat text-[17px] transition-all duration-300",
+        "flex-center h-[45px] w-[110px] bg-no-repeat transition-all duration-300",
         isActive &&
-          "button-select-type-product-bg rounded-bl-[5px] rounded-tr-[5px] border-[1px] border-yellow-300 bg-primary-300 text-white"
+          "button-select-type-product-bg rounded-bl-[5px] rounded-tr-[5px] border-[1px] border-yellow-300 bg-primary-300 text-[17px] text-white",
+        !isActive && "text-xs text-gray-500"
       )}
       onClick={() => handleSelected?.(variant.value)}
       {...props}
