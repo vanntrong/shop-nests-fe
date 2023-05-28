@@ -10,12 +10,21 @@ interface IOtherListCategoriesProps {
 
 const OtherListCategories: FC<IOtherListCategoriesProps> = ({ listCategories }) => {
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 lg:grid-rows-4 xl:grid-cols-3 xl:grid-rows-2">
       {listCategories.map((category, index) => (
         <div
-          className={clsx("flex-center relative w-full py-5", {
-            "h-[380px]": index === 0,
-          })}
+          className={clsx(
+            "flex-center relative w-full py-5",
+            {
+              "h-[380px]": index === 0,
+            },
+            "sm:min-h-[280px]",
+            { "h-full lg:col-span-2 lg:row-span-2 xl:col-span-1": index === 0 },
+            { "lg:col-span-2 xl:col-span-1": index === 3 || index === 1 },
+            { "lg:col-span-2 lg:row-span-2 xl:col-span-1 xl:row-span-1": index === 2 },
+            { "lg:col-span-4 lg:row-span-2 xl:col-span-1 xl:row-span-1": index === 4 }
+            // { "xl:col-span-1": index === 3 }
+          )}
           key={category.title}
         >
           <Image

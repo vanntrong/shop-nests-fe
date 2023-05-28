@@ -17,7 +17,7 @@ const ProductList: FC<IProductListProps> = ({ variants, title }) => {
   return (
     <div>
       <div className="before:center-by-position relative before:z-0 before:h-[1px] before:w-full before:bg-gray-200 before:content-['']">
-        <h1 className="z-1 relative mx-auto w-fit bg-white px-2 text-center text-xl font-normal text-primary">
+        <h1 className="z-1 relative mx-auto w-fit bg-white px-2 text-center text-xl font-normal text-primary sm:text-2xl">
           {title}
         </h1>
       </div>
@@ -39,7 +39,7 @@ const ProductList: FC<IProductListProps> = ({ variants, title }) => {
         </div>
       )}
 
-      <div className="mt-2 grid grid-cols-2 gap-1">
+      <div className="mt-2 grid grid-cols-2 gap-1 sm:mt-4 sm:grid-cols-3 lg:grid-cols-4">
         <ProductCard product={"a"} />
         <ProductCard product={"a"} />
         <ProductCard product={"a"} />

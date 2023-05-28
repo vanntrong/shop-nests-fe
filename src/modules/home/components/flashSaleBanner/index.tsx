@@ -16,7 +16,10 @@ interface IFlashSaleBannerProps {
 const FlashSaleBanner: FC<IFlashSaleBannerProps> = ({ src, alt, classNames }) => {
   return (
     <div
-      className={clsx(`relative h-[160px] w-full bg-cover bg-left`, classNames)}
+      className={clsx(
+        `relative h-[160px] w-full bg-cover bg-left sm:h-[115px] 2xl:h-full`,
+        classNames
+      )}
       style={{
         backgroundImage: `url('${src}')`,
       }}
@@ -24,13 +27,13 @@ const FlashSaleBanner: FC<IFlashSaleBannerProps> = ({ src, alt, classNames }) =>
       <Image
         src={HOME_RESOURCES.flashSaleText}
         alt={alt}
-        className="z-1 absolute left-1/2 top-2 h-[85px] w-[100px] translate-x-[-50%] object-cover"
+        className="z-1 absolute left-1/2 top-2 h-[85px] w-[100px] translate-x-[-50%] object-cover sm:top-0 sm:h-[60px] sm:w-[70px]"
         width={1920}
         height={1080}
       />
       <p
         className={clsx(
-          "absolute bottom-2 left-0 w-full text-center text-4xl text-yellow",
+          "absolute bottom-2 left-0 w-full text-center text-4xl text-yellow sm:text-5xl",
           dancingScript.className
         )}
       >
