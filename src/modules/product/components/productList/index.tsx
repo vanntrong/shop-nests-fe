@@ -7,19 +7,21 @@ import ButtonVariant from "../buttonVariant";
 import ProductCard from "../productCard";
 
 interface IProductListProps {
-  variants: TVariant[];
-  title: string;
+  variants?: TVariant[];
+  title?: string;
 }
 
 const ProductList: FC<IProductListProps> = ({ variants, title }) => {
-  const [selected, setSelected] = useState<string>(variants && variants[0].value);
+  const [selected, setSelected] = useState<string>(variants ? variants[0].value : "");
 
   return (
     <div>
       <div className="before:center-by-position relative before:z-0 before:h-[1px] before:w-full before:bg-gray-200 before:content-['']">
-        <h1 className="z-1 relative mx-auto w-fit bg-white px-2 text-center text-xl font-normal text-primary sm:text-2xl">
-          {title}
-        </h1>
+        {title && (
+          <h1 className="z-1 relative mx-auto w-fit bg-white px-2 text-center text-xl font-normal text-primary sm:text-2xl">
+            {title}
+          </h1>
+        )}
       </div>
 
       {variants && (

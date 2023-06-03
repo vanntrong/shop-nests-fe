@@ -2,6 +2,5 @@
   "src/**/*.+(js|ts|tsx)": ["eslint --fix --ext .ts,.tsx ./src --ignore-path .gitignore"],
   "src/**/*.{js,jsx,ts,tsx,css,scss,md}": [
     "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|tsx)\""
-  ],
-  "src/**/*.{css,scss}": ["stylelint --ignore-path .gitignore --fix **/*.{css,scss}"]
+  ]
 }

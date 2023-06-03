@@ -2,8 +2,8 @@
 
 import clsx from "clsx";
 import Link from "next/link";
-import React, { FC, useCallback, useRef, useState } from "react";
-import { GoArrowDown } from "react-icons/go";
+import { FC, useCallback, useRef, useState } from "react";
+import { GoArrowDown, GoArrowRight } from "react-icons/go";
 import { useOnClickOutside } from "usehooks-ts";
 
 import Button from "@/components/button";
@@ -15,6 +15,11 @@ interface INavigationItemProps {
   nav: TNavigation;
   variant?: "header" | "sidebar";
 }
+
+const NavigationIcon = {
+  header: <GoArrowDown color="white" size={12} />,
+  sidebar: <GoArrowRight color="black" size={12} />,
+};
 
 const NavigationItem: FC<INavigationItemProps> = ({ nav, variant = "header" }) => {
   const ref = useRef<HTMLInputElement>(null);
@@ -28,13 +33,17 @@ const NavigationItem: FC<INavigationItemProps> = ({ nav, variant = "header" }) =
 
   return (
     <div
-      className={clsx("relative w-full flex-1 pb-2 2xl:w-fit 2xl:flex-[unset]", {
-        "z-[5]": variant === "sidebar",
+      className={clsx("relative w-full flex-1 pb-2 xl:w-fit xl:flex-[unset]", {
+        "z-[5] xl:w-full": variant === "sidebar",
         "z-[6]": variant === "header",
       })}
     >
       <Button onClick={() => setIsShowSub(true)} className="w-full">
-        <div className={clsx("flex w-full items-center justify-center gap-2")}>
+        <div
+          className={clsx("flex w-full items-center justify-center gap-2", {
+            "justify-between": variant === "sidebar",
+          })}
+        >
           <Link
             href={nav.href}
             className={clsx("pointer-events-none", {
@@ -50,11 +59,7 @@ const NavigationItem: FC<INavigationItemProps> = ({ nav, variant = "header" }) =
               {nav.title}
             </span>
           </Link>
-          {nav.children && (
-            <div className="flex items-center">
-              <GoArrowDown color={variant === "header" ? "white" : "black"} size={12} />
-            </div>
-          )}
+          {nav.children && <div className="flex items-center">{NavigationIcon[variant]}</div>}
         </div>
       </Button>
       {nav.children && (
