@@ -14,6 +14,9 @@ module.exports = {
         "yellow-300": "#b27e32",
         "yellow-500": "#ffeb95",
         "black-900": "#111",
+        "green-300": "#2ecc71",
+        "red-300": "#ff0000",
+        "red-400": "#ef0b0b",
       },
       keyframes: {
         fade: {

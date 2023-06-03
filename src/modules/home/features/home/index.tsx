@@ -11,7 +11,7 @@ import ProductList from "@/modules/product/components/productList";
 const HomePage = () => {
   return (
     <section className="2xl:mt-3">
-      <div className="lg:grid lg:grid-cols-4 lg:gap-3 xl:px-6">
+      <div className="mx-auto max-w-[1230px] lg:grid lg:grid-cols-4 lg:gap-3 xl:px-6">
         <div className="hidden lg:col-span-1 lg:block">
           <Sidebar />
         </div>
