@@ -7,9 +7,9 @@ import Breadcrumb from "@/components/breadrcumb";
 import Button from "@/components/button";
 import CountDownBanner from "@/components/countDownBanner";
 import QuantityInput from "@/components/quantityInput";
+import ProductCompanyIntro from "@/modules/product/components/productCompanyIntro";
 import ProductDetailSlider from "@/modules/product/components/productDetailSlider";
 import ProductDetailTable from "@/modules/product/components/productDetailTable";
-import ProductCompanyIntro from "@/modules/product/productCompanyIntro";
 
 const ProductDetail = () => {
   const [quantity, setQuantity] = useState<number>(1);

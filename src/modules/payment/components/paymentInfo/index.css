@@ -1,0 +1,46 @@
+.payment-info {
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.07),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  width: 100%;
+}
+
+.payment-info th,
+.payment-info td {
+  border-bottom: 1px solid #ececec;
+  line-height: 1.2;
+  font-size: 0.8rem;
+}
+
+.payment-info th {
+  text-align: left;
+}
+
+.payment-info td {
+  text-align: right;
+}
+
+.payment-info .payment-product-name {
+  min-width: 80px;
+  text-align: left;
+}
+
+.payment-info .payment-product-total {
+  text-align: right;
+  padding-right: 0;
+}
+
+.payment-info .payment-product-name.product-name {
+  color: #666;
+  font-size: 12px;
+}
+
+.table-no-border th,
+.table-no-border td {
+  border-bottom: 0;
+}
