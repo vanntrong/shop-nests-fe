@@ -1,8 +1,14 @@
+import clsx from "clsx";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { Lora } from "next/font/google";
 import React from "react";
 
-const inter = Inter({ subsets: ["latin"] });
+import Footer from "@/components/footer";
+import Header from "@/components/header";
+
+const lora = Lora({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Create Next App",
@@ -12,7 +18,13 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={clsx(lora.className, "bg-white")}>
+        <Header />
+
+        <main>{children}</main>
+
+        <Footer />
+      </body>
     </html>
   );
 }
