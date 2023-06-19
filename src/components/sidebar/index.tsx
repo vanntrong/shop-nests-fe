@@ -12,6 +12,7 @@ type TSidebarProps = ComponentProps<"input">;
 
 const Sidebar: FC<TSidebarProps> = ({ className, ...props }) => {
   const { categories } = useAppContext();
+
   return (
     <div className={clsx("w-full rounded-xl bg-white px-4 shadow-lg", className)} {...props}>
       <div className="flex items-center gap-2 rounded-md bg-primary p-2">

@@ -1,6 +1,9 @@
-import { FC } from "react";
+"use client";
+
+import { FC, useState } from "react";
 import { IoFilter } from "react-icons/io5";
 
+import { TGetAllProductsParams } from "@/apis/product/getAllProducts";
 import Breadcrumb from "@/components/breadrcumb";
 import Button from "@/components/button";
 import FilterPrice from "@/components/filterPrice";
@@ -9,13 +12,23 @@ import ProductCardRecentView from "@/modules/product/components/productCardRecen
 import ProductList from "@/modules/product/components/productList";
 import { TProduct } from "@/modules/product/types/product.type";
 import { TCategory } from "@/types/category";
+import { IPaginationResponse } from "@/types/common";
+
+import useGetProducts from "../../services/useGetProducts";
 
 interface IProductsProps {
   category: TCategory;
-  products: TProduct[];
+  products: IPaginationResponse<TProduct>;
 }
 
 const Products: FC<IProductsProps> = ({ category, products }) => {
+  const [params, setParams] = useState<TGetAllProductsParams>({
+    category: category.slug,
+  });
+  const { data } = useGetProducts(params, {
+    initialData: products,
+  });
+
   const breadcrumbData = [
     {
       name: "Trang chủ",
@@ -59,7 +72,13 @@ const Products: FC<IProductsProps> = ({ category, products }) => {
           <div className="mt-4 px-4">
             <h3 className="text-base uppercase">Lọc theo giá</h3>
             <div className="h-[2px] w-[30px] bg-black-900"></div>
-            <FilterPrice />
+            <FilterPrice
+              onChange={(min, max) =>
+                setParams(prev => ({ ...prev, min_price: min, max_price: max }))
+              }
+              minPrice={10000}
+              maxPrice={100000000}
+            />
           </div>
 
           <div className="mt-6 px-4">
@@ -80,7 +99,7 @@ const Products: FC<IProductsProps> = ({ category, products }) => {
         <div className="lg:col-span-3">
           <p className="px-3 text-base">{category.description}</p>
           <div className="mt-4">
-            <ProductList products={products} />
+            <ProductList products={data?.data || []} />
           </div>
         </div>
       </div>

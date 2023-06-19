@@ -38,12 +38,12 @@ const HomePage: FC<IHomePageProps> = () => {
 
       <div className="px-2 xl:mx-auto xl:max-w-[1045px]">
         <div className="mt-4 grid grid-cols-1 gap-10 sm:mt-8 sm:gap-20 md:mt-12 lg:mt-16">
-          <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH - TINH CHẾ" />
+          {/* <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH - TINH CHẾ" />
           <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH THƯỢNG HẠNG - SƠ CHẾ" />
           <ProductList variants={dummyVariants} title="TỔ YẾN CÒN LÔNG - THÔ" />
           <ProductList variants={dummyVariants} title="YẾN CHƯNG TƯƠI" />
           <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH - TINH CHẾ" />
-          <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH - TINH CHẾ" />
+          <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH - TINH CHẾ" /> */}
         </div>
 
         <div className="mt-10">

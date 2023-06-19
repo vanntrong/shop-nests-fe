@@ -13,7 +13,7 @@ export interface IProductsPageProps {
 const Index = async ({ params }: IProductsPageProps) => {
   const categorySlug = params.type.pop();
   const { data: category } = await getCategory(categorySlug ?? "");
-  const { data: products } = await getAllProducts({
+  const products = await getAllProducts({
     category: categorySlug,
   });
 

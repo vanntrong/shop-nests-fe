@@ -18,7 +18,10 @@ const ProductCard: FC<IProductCardProps> = ({ product, ...props }) => {
 
   return (
     <Link href={`/san-pham/${product.slug}`}>
-      <div className="product-card-shadow border border-gray-200 bg-white" {...props}>
+      <div
+        className="product-card-shadow flex h-full flex-col border border-gray-200 bg-white"
+        {...props}
+      >
         <div className={"relative h-[171px] w-full cursor-pointer overflow-hidden 2xl:h-[258px]"}>
           <Image
             src={product.thumbnailUrl}
@@ -28,8 +31,8 @@ const ProductCard: FC<IProductCardProps> = ({ product, ...props }) => {
           />
         </div>
 
-        <div className="px-4 pb-5 pt-10">
-          <h4 className=" mb-2 min-h-[40px] text-sm font-semibold text-black-900">
+        <div className="flex flex-1 flex-col px-4 pb-5 pt-10">
+          <h4 className=" mb-2 h-full min-h-[40px] text-sm font-semibold text-black-900">
             {product.name}
           </h4>
           {isSaleAvailable && (
