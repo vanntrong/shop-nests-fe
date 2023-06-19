@@ -1,5 +1,6 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import { FC } from "react";
 
 import Sidebar from "@/components/sidebar";
 import FlashSaleBanner from "@/modules/home/components/flashSaleBanner";
@@ -7,8 +8,13 @@ import OtherListCategories from "@/modules/home/components/otherListCategories";
 import { dummyOtherListCategories, dummyVariants } from "@/modules/home/configs/dummyData";
 import { HOME_RESOURCES } from "@/modules/home/configs/resources.config";
 import ProductList from "@/modules/product/components/productList";
+import { TCategory } from "@/types/category";
 
-const HomePage = () => {
+interface IHomePageProps {
+  categories?: TCategory[];
+}
+
+const HomePage: FC<IHomePageProps> = () => {
   return (
     <section className="2xl:mt-3">
       <div className="mx-auto max-w-[1230px] lg:grid lg:grid-cols-4 lg:gap-3 xl:px-6">

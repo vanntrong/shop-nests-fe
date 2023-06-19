@@ -7,12 +7,12 @@ import { GoArrowDown, GoArrowRight } from "react-icons/go";
 import { useOnClickOutside } from "usehooks-ts";
 
 import Button from "@/components/button";
-import { TNavigation } from "@/types/navigation";
+import { TCategory } from "@/types/category";
 
 import NavigationSubMenu from "../navigationSubMenu";
 
 interface INavigationItemProps {
-  nav: TNavigation;
+  nav: TCategory;
   variant?: "header" | "sidebar";
 }
 
@@ -45,7 +45,7 @@ const NavigationItem: FC<INavigationItemProps> = ({ nav, variant = "header" }) =
           })}
         >
           <Link
-            href={nav.href}
+            href={`/danh-muc-san-pham/${nav.slug}`}
             className={clsx("pointer-events-none", {
               "pointer-events-auto": isShowSub,
             })}
@@ -56,13 +56,15 @@ const NavigationItem: FC<INavigationItemProps> = ({ nav, variant = "header" }) =
                 "text-center text-white": variant === "header",
               })}
             >
-              {nav.title}
+              {nav.name}
             </span>
           </Link>
-          {nav.children && <div className="flex items-center">{NavigationIcon[variant]}</div>}
+          {nav.subCategories && nav.subCategories.length > 0 && (
+            <div className="flex items-center">{NavigationIcon[variant]}</div>
+          )}
         </div>
       </Button>
-      {nav.children && (
+      {nav.subCategories && nav.subCategories.length > 0 && (
         <div
           className={clsx("absolute w-max transition-all duration-300", {
             "opacity-1 pointer-events-auto visible translate-y-0": isShowSub,
@@ -72,7 +74,7 @@ const NavigationItem: FC<INavigationItemProps> = ({ nav, variant = "header" }) =
           })}
           ref={ref}
         >
-          <NavigationSubMenu navs={nav.children} />
+          <NavigationSubMenu navs={nav.subCategories} />
         </div>
       )}
     </div>

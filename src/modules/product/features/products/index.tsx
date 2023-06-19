@@ -1,35 +1,45 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { IoFilter } from "react-icons/io5";
 
-import { IProductsPageProps } from "@/app/danh-muc-san-pham/[type]/[subType]/page";
 import Breadcrumb from "@/components/breadrcumb";
 import Button from "@/components/button";
 import FilterPrice from "@/components/filterPrice";
 import Sidebar from "@/components/sidebar";
 import ProductCardRecentView from "@/modules/product/components/productCardRecentView";
 import ProductList from "@/modules/product/components/productList";
+import { TProduct } from "@/modules/product/types/product.type";
+import { TCategory } from "@/types/category";
 
-type TProductsProps = IProductsPageProps;
+interface IProductsProps {
+  category: TCategory;
+  products: TProduct[];
+}
 
-const Products: FC<TProductsProps> = () => {
+const Products: FC<IProductsProps> = ({ category, products }) => {
   const breadcrumbData = [
     {
       name: "Trang chủ",
       href: "/",
     },
     {
-      name: "Sản phẩm",
-      href: "/san-pham",
-    },
-    {
-      name: "Tổ Yến",
-      href: "/san-pham/to-yen",
-    },
-    {
-      name: "Tổ Yến Tinh Chế",
-      href: "/san-pham/to-yen/to-yen-tinh-che",
+      name: "Danh mục sản phẩm",
+      href: "#",
     },
   ];
+
+  const getParentCategory = (category: TCategory) => {
+    if (category.parentCategory) {
+      getParentCategory(category.parentCategory);
+    }
+    breadcrumbData.push({
+      name: category.name,
+      href: `/danh-muc-san-pham/${category.slug}`,
+    });
+    return;
+  };
+
+  getParentCategory(category);
+
   return (
     <div className="xl:mx-auto xl:max-w-[1080px]">
       <div className="px-4 pt-4">
@@ -68,14 +78,9 @@ const Products: FC<TProductsProps> = () => {
         </div>
 
         <div className="lg:col-span-3">
-          <p className="px-3 text-base">
-            Là dòng yến sào được xử lý sạch lông bằng phương pháp ngâm tổ yến vào nước để làm mềm và
-            nhặt sạch lông. Sau đó tổ yến được tái tạo hình, khử trùng và sấy khô. Tổ yến sạch thành
-            phẩm sẽ được ghép lại từ nhiều tổ khác, có độ thẫm mỹ, cảm giác về độ sợi, nở ở mức
-            trung bình. Phù hợp với nhu cầu tập trung vào bồi bổ sức khỏe.
-          </p>
+          <p className="px-3 text-base">{category.description}</p>
           <div className="mt-4">
-            <ProductList />
+            <ProductList products={products} />
           </div>
         </div>
       </div>

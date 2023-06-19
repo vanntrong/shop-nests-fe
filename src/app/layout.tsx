@@ -1,12 +1,14 @@
 import clsx from "clsx";
-import "./globals.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { Lora } from "next/font/google";
 import React from "react";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import "./globals.css";
 
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import { AppProvider } from "@/providers/appProvider";
+import QueryProvider from "@/providers/queryClientProvider";
 
 const lora = Lora({ subsets: ["latin"] });
 
@@ -17,14 +19,16 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={clsx(lora.className, "bg-white")}>
-        <Header />
-
-        <main>{children}</main>
-
-        <Footer />
-      </body>
-    </html>
+    <QueryProvider>
+      <html lang="en">
+        <AppProvider>
+          <body className={clsx(lora.className, "bg-white")}>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </body>
+        </AppProvider>
+      </html>
+    </QueryProvider>
   );
 }

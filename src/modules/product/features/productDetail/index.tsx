@@ -1,7 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useCallback, useState } from "react";
+import clsx from "clsx";
+import dayjs from "dayjs";
+import { isNil } from "lodash";
+import { FC, useCallback, useState } from "react";
 
 import Breadcrumb from "@/components/breadrcumb";
 import Button from "@/components/button";
@@ -9,10 +12,21 @@ import CountDownBanner from "@/components/countDownBanner";
 import QuantityInput from "@/components/quantityInput";
 import ProductCompanyIntro from "@/modules/product/components/productCompanyIntro";
 import ProductDetailSlider from "@/modules/product/components/productDetailSlider";
-import ProductDetailTable from "@/modules/product/components/productDetailTable";
+// import ProductDetailTable from "@/modules/product/components/productDetailTable";
+import { TProduct } from "@/modules/product/types/product.type";
+import { calculateSale, numberToVND } from "@/utils/number";
 
-const ProductDetail = () => {
+import ProductDetailDescription from "../../components/productDetailDescription";
+
+interface IProductDetailProps {
+  product: TProduct;
+}
+
+const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
   const [quantity, setQuantity] = useState<number>(1);
+  const isSaleAvailable =
+    !isNil(product.salePrice) && !isNil(product.saleEndAt) && dayjs().isBefore(product.saleEndAt);
+
   const breadcrumbData = [
     {
       name: "Trang chủ",
@@ -52,25 +66,42 @@ const ProductDetail = () => {
 
       <div className="sm:grid-cols-3 sm:px-3 md:grid">
         <div className="mt-4">
-          <ProductDetailSlider />
+          <ProductDetailSlider images={product.images} alt={product.name} />
         </div>
         <div className="mt-4 px-4">
-          <CountDownBanner />
+          {product.saleEndAt && isSaleAvailable && <CountDownBanner end={product.saleEndAt} />}
 
-          <h2 className="mt-4 text-2xl font-medium">Tổ yến tinh chế 250g</h2>
           <div className="mt-2 flex items-center justify-between sm:justify-start sm:gap-3 md:flex-wrap md:gap-1">
-            <p className="before:center-by-position relative w-fit text-[28px] font-normal text-black-900 opacity-60 before:h-[1px] before:w-full before:bg-black-900 before:content-['']">
-              4.000.000đ
+            <h2 className="mt-4 text-2xl font-medium">{product.name}</h2>
+            <p
+              className={clsx(
+                "before:center-by-position relative w-fit text-[28px] font-normal text-black-900",
+                {
+                  "opacity-60 before:h-[1px] before:w-full before:bg-black-900 before:content-['']":
+                    isSaleAvailable,
+                }
+              )}
+            >
+              {numberToVND(product.price)}
             </p>
-            <p className="text-[28px] font-bold leading-[16px] text-primary-300">3.100.000đ</p>
+            {isSaleAvailable && (
+              <p className="text-[28px] font-bold leading-[16px] text-primary-300">
+                {numberToVND(product.salePrice ?? 0)}
+              </p>
+            )}
           </div>
-          <div className="w-fit rounded-2xl bg-red-500 py-1 pl-2 pr-3 text-sm font-bold text-white md:mt-2">
-            <p>Giảm 23%</p>
-          </div>
+          {isSaleAvailable && (
+            <div className="w-fit rounded-2xl bg-red-500 py-1 pl-2 pr-3 text-sm font-bold text-white md:mt-2">
+              <p>Giảm {calculateSale(product.price, product.salePrice ?? 0)}%</p>
+            </div>
+          )}
 
           <div className="mt-3 flex items-stretch gap-2 md:flex-wrap">
             <QuantityInput value={quantity} onChange={handleQuantityChange} />
-            <Button className="min-h-[40px] rounded-[7px] bg-green-300 px-2 uppercase text-white">
+            <Button
+              className="min-h-[40px] rounded-[7px] bg-green-300 px-2 uppercase text-white"
+              disabled={product.inventory < quantity}
+            >
               Thêm vào giỏ
             </Button>
             <Button className="min-h-[40px] rounded-[7px] bg-red-300 px-2 uppercase text-white">
@@ -116,12 +147,17 @@ const ProductDetail = () => {
             <ProductCompanyIntro />
           </div>
           <div className="mt-6 md:mt-0">
-            <ProductDetailTable />
+            {/* <ProductDetailTable /> */}
+            <p className="mt-8">{product.description}</p>
           </div>
         </div>
 
         <div className="hidden md:col-span-3 md:mx-auto md:mt-6 md:block">
           <ProductCompanyIntro />
+        </div>
+
+        <div className="col-span-3 mt-6">
+          <ProductDetailDescription content={product.detailDescription} />
         </div>
       </div>
     </div>

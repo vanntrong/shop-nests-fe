@@ -1,6 +1,7 @@
 "use client";
 import { FC, useState } from "react";
 
+import { TProduct } from "@/modules/product/types/product.type";
 import { TVariant } from "@/types/variant";
 
 import ButtonVariant from "../buttonVariant";
@@ -9,9 +10,10 @@ import ProductCard from "../productCard";
 interface IProductListProps {
   variants?: TVariant[];
   title?: string;
+  products: TProduct[];
 }
 
-const ProductList: FC<IProductListProps> = ({ variants, title }) => {
+const ProductList: FC<IProductListProps> = ({ variants, title, products }) => {
   const [selected, setSelected] = useState<string>(variants ? variants[0].value : "");
 
   return (
@@ -42,14 +44,9 @@ const ProductList: FC<IProductListProps> = ({ variants, title }) => {
       )}
 
       <div className="mt-2 grid grid-cols-2 gap-1 sm:mt-4 sm:grid-cols-3 lg:grid-cols-4">
-        <ProductCard product={"a"} />
-        <ProductCard product={"a"} />
-        <ProductCard product={"a"} />
-        <ProductCard product={"a"} />
-        <ProductCard product={"a"} />
-        <ProductCard product={"a"} />
-        <ProductCard product={"a"} />
-        <ProductCard product={"a"} />
+        {products.map(product => (
+          <ProductCard product={product} key={product.id} />
+        ))}
       </div>
     </div>
   );

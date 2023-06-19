@@ -1,7 +1,6 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 import queryString from "query-string";
 
-import { API_URL } from "@/configs/app.config";
 import { ETokenName, T } from "@/types/common";
 import {
   createHandlerChain,
@@ -15,7 +14,7 @@ import {
 import { getCookie } from "./cookies";
 
 export const axiosInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: "http://localhost:8080/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

@@ -1,16 +1,19 @@
-import React from "react";
+"use client";
+
+import { take } from "lodash";
 import { BsCart4 } from "react-icons/bs";
 
 import Button from "@/components/button";
-import { NAVIGATION_CONFIGS } from "@/configs/header.config";
+import { useAppContext } from "@/providers/appProvider";
 
 import NavigationItem from "./navigationItem";
 
 const Navigation = () => {
+  const { categories } = useAppContext();
   return (
     <div className="flex items-center justify-between gap-3 2xl:justify-center 2xl:gap-5">
-      {NAVIGATION_CONFIGS.map(nav => (
-        <NavigationItem nav={nav} key={nav.title} />
+      {take(categories, 8).map(nav => (
+        <NavigationItem nav={nav} key={nav.name} />
       ))}
       <Button className="flex items-center gap-2 pb-2">
         <span className="block text-center text-sm font-normal text-white">Giỏ hàng</span>
