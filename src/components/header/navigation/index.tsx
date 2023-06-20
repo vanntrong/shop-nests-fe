@@ -9,10 +9,11 @@ import { useAppContext } from "@/providers/appProvider";
 import NavigationItem from "./navigationItem";
 
 const Navigation = () => {
-  const { categories } = useAppContext();
+  const { sidebarCategories } = useAppContext();
+
   return (
     <div className="flex items-center justify-between gap-3 2xl:justify-center 2xl:gap-5">
-      {take(categories, 8).map(nav => (
+      {take(sidebarCategories, 8).map(nav => (
         <NavigationItem nav={nav} key={nav.name} />
       ))}
       <Button className="flex items-center gap-2 pb-2">

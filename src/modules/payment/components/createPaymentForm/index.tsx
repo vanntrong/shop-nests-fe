@@ -45,8 +45,6 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
     [_onSubmit]
   );
 
-  console.log(errors);
-
   return (
     <form
       className="mt-6 flex flex-col gap-3 lg:pb-20"

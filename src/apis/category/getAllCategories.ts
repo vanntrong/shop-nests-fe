@@ -2,6 +2,15 @@ import { TCategory } from "@/types/category";
 import { IPaginationParams, IPaginationResponse } from "@/types/common";
 import { axiosInstance } from "@/utils/axios";
 
-export const getAllCategories = async (params: IPaginationParams) => {
-  return axiosInstance.get<IPaginationResponse<TCategory>>("/categories", { params });
+export interface IGetCategoriesParams extends IPaginationParams {
+  isShowAtHome?: boolean;
+  isAtSidebar?: boolean;
+  maxLevel?: number;
+  minLevel?: number;
+}
+
+export const getAllCategories = async (
+  params: IGetCategoriesParams
+): Promise<IPaginationResponse<TCategory>> => {
+  return axiosInstance.get("/categories", { params });
 };

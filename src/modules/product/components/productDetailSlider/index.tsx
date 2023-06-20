@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-import React, { CSSProperties, FC, useEffect, useState } from "react";
+import { CSSProperties, FC, useState } from "react";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import Slider, { Settings } from "react-slick";
 
@@ -35,10 +35,6 @@ const ProductDetailSlider: FC<IProductDetailSliderProps> = ({ images, alt }) => 
       },
     ],
   };
-
-  useEffect(() => {
-    console.log({ activeIndex });
-  }, [activeIndex]);
 
   return (
     <div>

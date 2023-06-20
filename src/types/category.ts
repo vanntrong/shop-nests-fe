@@ -7,6 +7,9 @@ export type TCategory = {
   level: number;
   updatedAt: string;
   deletedAt: null;
+  isShowAtHome?: boolean;
+  isAtSidebar?: boolean;
+  image?: string;
 
   subCategories?: TCategory[];
   parentCategory?: TCategory;

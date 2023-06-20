@@ -1,3 +1,6 @@
+import { IPaginationResponse } from "@/types/common";
+import { TVariant } from "@/types/variant";
+
 export type TProduct = {
   id: string;
   isActive: true;
@@ -16,4 +19,10 @@ export type TProduct = {
   createdAt: string;
   updatedAt: string | null;
   deletedAt: string | null;
+};
+
+export type TProductList = {
+  title: string;
+  variant: TVariant[] | null;
+  products: IPaginationResponse<TProduct>;
 };

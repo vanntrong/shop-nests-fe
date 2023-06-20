@@ -7,13 +7,14 @@ import { TGetAllProductsParams } from "@/apis/product/getAllProducts";
 import Breadcrumb from "@/components/breadrcumb";
 import Button from "@/components/button";
 import FilterPrice from "@/components/filterPrice";
+import Pagination from "@/components/pagination";
 import Sidebar from "@/components/sidebar";
 import ProductCardRecentView from "@/modules/product/components/productCardRecentView";
-import ProductList from "@/modules/product/components/productList";
 import { TProduct } from "@/modules/product/types/product.type";
 import { TCategory } from "@/types/category";
 import { IPaginationResponse } from "@/types/common";
 
+import ProductCard from "../../components/productCard";
 import useGetProducts from "../../services/useGetProducts";
 
 interface IProductsProps {
@@ -24,6 +25,8 @@ interface IProductsProps {
 const Products: FC<IProductsProps> = ({ category, products }) => {
   const [params, setParams] = useState<TGetAllProductsParams>({
     category: category.slug,
+    offset: 0,
+    limit: 10,
   });
   const { data } = useGetProducts(params, {
     initialData: products,
@@ -99,7 +102,24 @@ const Products: FC<IProductsProps> = ({ category, products }) => {
         <div className="lg:col-span-3">
           <p className="px-3 text-base">{category.description}</p>
           <div className="mt-4">
-            <ProductList products={data?.data || []} />
+            <div className="mt-2 grid grid-cols-2 gap-1 sm:mt-4 sm:grid-cols-3 lg:grid-cols-4">
+              {data?.data?.map(product => (
+                <ProductCard product={product} key={product.id} />
+              ))}
+            </div>
+            {data?.total && data.total > data.limit && (
+              <div className="mt-6">
+                <Pagination
+                  pageCount={Math.ceil(data.total / data.limit)}
+                  onPageChange={event => {
+                    setParams(prev => ({
+                      ...prev,
+                      offset: event.selected * (params.limit || 10),
+                    }));
+                  }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

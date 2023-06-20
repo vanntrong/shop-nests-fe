@@ -12,25 +12,30 @@ export const dummyVariants: TVariant[] = [
   },
 ];
 
-export const dummyOtherListCategories: TCategory[] = [
+export const dummyOtherListCategories: Partial<TCategory>[] = [
   {
-    title: "Hồng sâm",
+    name: "Hồng sâm",
     image: "/images/home/bg-nhan-sam.jpeg",
+    slug: "hong-sam",
   },
   {
-    title: "linh chi",
+    name: "linh chi",
     image: "/images/home/bg-linh-chi.jpeg",
+    slug: "linh-chi",
   },
   {
-    title: "an cung ngưu",
+    name: "an cung ngưu",
     image: "/images/home/bg-an-cung-ngu.jpeg",
+    slug: "an-cung-nguu",
   },
   {
-    title: "Tinh dầu thông đỏ",
+    name: "Tinh dầu thông đỏ",
     image: "/images/home/bg-tinh-dau-thong-do.jpeg",
+    slug: "tinh-dau-thong-do",
   },
   {
-    title: "Đông trùng",
+    name: "Đông trùng",
     image: "/images/home/bg-dong-trung.png",
+    slug: "dong-trung-ha-thao",
   },
 ];

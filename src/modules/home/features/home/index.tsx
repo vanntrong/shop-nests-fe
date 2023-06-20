@@ -1,20 +1,20 @@
-"use client";
 import Image from "next/image";
 import { FC } from "react";
 
 import Sidebar from "@/components/sidebar";
 import FlashSaleBanner from "@/modules/home/components/flashSaleBanner";
 import OtherListCategories from "@/modules/home/components/otherListCategories";
-import { dummyOtherListCategories, dummyVariants } from "@/modules/home/configs/dummyData";
+import { dummyOtherListCategories } from "@/modules/home/configs/dummyData";
 import { HOME_RESOURCES } from "@/modules/home/configs/resources.config";
 import ProductList from "@/modules/product/components/productList";
-import { TCategory } from "@/types/category";
+import { TProductList } from "@/modules/product/types/product.type";
 
 interface IHomePageProps {
-  categories?: TCategory[];
+  productsList: TProductList[];
+  otherProductsList: TProductList;
 }
 
-const HomePage: FC<IHomePageProps> = () => {
+const HomePage: FC<IHomePageProps> = ({ productsList, otherProductsList }) => {
   return (
     <section className="2xl:mt-3">
       <div className="mx-auto max-w-[1230px] lg:grid lg:grid-cols-4 lg:gap-3 xl:px-6">
@@ -38,12 +38,21 @@ const HomePage: FC<IHomePageProps> = () => {
 
       <div className="px-2 xl:mx-auto xl:max-w-[1045px]">
         <div className="mt-4 grid grid-cols-1 gap-10 sm:mt-8 sm:gap-20 md:mt-12 lg:mt-16">
-          {/* <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH - TINH CHẾ" />
-          <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH THƯỢNG HẠNG - SƠ CHẾ" />
-          <ProductList variants={dummyVariants} title="TỔ YẾN CÒN LÔNG - THÔ" />
-          <ProductList variants={dummyVariants} title="YẾN CHƯNG TƯƠI" />
-          <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH - TINH CHẾ" />
-          <ProductList variants={dummyVariants} title="TỔ YẾN SẠCH - TINH CHẾ" /> */}
+          {productsList.map(productList => (
+            <ProductList
+              variants={productList.variant}
+              title={productList.title}
+              key={productList.title}
+              products={productList.products}
+              variantTitle="Chọn trọng lượng"
+            />
+          ))}
+
+          <ProductList
+            variants={otherProductsList.variant}
+            title={otherProductsList.title}
+            products={otherProductsList.products}
+          />
         </div>
 
         <div className="mt-10">

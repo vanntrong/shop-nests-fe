@@ -11,7 +11,7 @@ import NavigationItem from "../header/navigation/navigationItem";
 type TSidebarProps = ComponentProps<"input">;
 
 const Sidebar: FC<TSidebarProps> = ({ className, ...props }) => {
-  const { categories } = useAppContext();
+  const { sidebarCategories } = useAppContext();
 
   return (
     <div className={clsx("w-full rounded-xl bg-white px-4 shadow-lg", className)} {...props}>
@@ -19,8 +19,8 @@ const Sidebar: FC<TSidebarProps> = ({ className, ...props }) => {
         <BiMenu color="white" size={24} />
         <h2 className="text-center text-base font-bold uppercase text-white">danh mục sản phẩm</h2>
       </div>
-      <div className="mt-2 flex flex-col gap-4 pb-4">
-        {categories.map(nav => (
+      <div className="mt-2 flex flex-col gap-2 pb-4">
+        {sidebarCategories.map(nav => (
           <NavigationItem nav={nav} key={`${nav.id}-sidebar`} variant="sidebar" />
         ))}
       </div>

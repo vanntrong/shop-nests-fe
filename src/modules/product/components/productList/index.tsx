@@ -1,20 +1,41 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
+import { TGetAllProductsParams } from "@/apis/product/getAllProducts";
 import { TProduct } from "@/modules/product/types/product.type";
+import { IPaginationResponse } from "@/types/common";
 import { TVariant } from "@/types/variant";
 
+import useGetProducts from "../../services/useGetProducts";
 import ButtonVariant from "../buttonVariant";
 import ProductCard from "../productCard";
 
 interface IProductListProps {
-  variants?: TVariant[];
+  variants?: TVariant[] | null;
   title?: string;
-  products: TProduct[];
+  products: IPaginationResponse<TProduct>;
+  variantTitle?: string;
 }
 
-const ProductList: FC<IProductListProps> = ({ variants, title, products }) => {
-  const [selected, setSelected] = useState<string>(variants ? variants[0].value : "");
+const ProductList: FC<IProductListProps> = ({ variants, title, products, variantTitle }) => {
+  const [params, setParams] = useState<TGetAllProductsParams>({
+    category: variants ? variants[0].value : undefined,
+    offset: 0,
+    limit: 10,
+  });
+
+  const { data } = useGetProducts(
+    {
+      ...params,
+    },
+    {
+      initialData: products,
+    }
+  );
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
     <div>
@@ -26,25 +47,25 @@ const ProductList: FC<IProductListProps> = ({ variants, title, products }) => {
         )}
       </div>
 
-      {variants && (
-        <h4 className="w-full text-center text-lg font-normal uppercase">Chọn trọng lượng</h4>
+      {variantTitle && variants && (
+        <h4 className="w-full text-center text-lg font-normal uppercase">{variantTitle}</h4>
       )}
 
       {variants && (
-        <div className="flex-center mt-2 gap-1">
+        <div className="flex-center mt-2 gap-3">
           {variants.map(variant => (
             <ButtonVariant
               key={variant.value}
               variant={variant}
-              handleSelected={value => setSelected(value)}
-              isActive={variant.value === selected}
+              handleSelected={value => setParams(prev => ({ ...prev, category: value }))}
+              isActive={variant.value === params.category}
             />
           ))}
         </div>
       )}
 
       <div className="mt-2 grid grid-cols-2 gap-1 sm:mt-4 sm:grid-cols-3 lg:grid-cols-4">
-        {products.map(product => (
+        {data?.data.map(product => (
           <ProductCard product={product} key={product.id} />
         ))}
       </div>
