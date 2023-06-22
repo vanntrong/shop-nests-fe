@@ -5,15 +5,17 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import { isNil } from "lodash";
 import { FC, useCallback, useState } from "react";
+import { FaSpinner } from "react-icons/fa";
 
 import Breadcrumb from "@/components/breadrcumb";
 import Button from "@/components/button";
 import CountDownBanner from "@/components/countDownBanner";
 import QuantityInput from "@/components/quantityInput";
+import useUpdateCart from "@/modules/cart/services/useUpdateCart";
 import ProductCompanyIntro from "@/modules/product/components/productCompanyIntro";
 import ProductDetailSlider from "@/modules/product/components/productDetailSlider";
-// import ProductDetailTable from "@/modules/product/components/productDetailTable";
 import { TProduct } from "@/modules/product/types/product.type";
+import { useAppContext } from "@/providers/appProvider";
 import { calculateSale, numberToVND } from "@/utils/number";
 
 import ProductDetailDescription from "../../components/productDetailDescription";
@@ -24,6 +26,9 @@ interface IProductDetailProps {
 
 const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
   const [quantity, setQuantity] = useState<number>(1);
+  const { cart } = useAppContext();
+  const { mutate: updateCart, isLoading } = useUpdateCart();
+
   const isSaleAvailable =
     !isNil(product.salePrice) && !isNil(product.saleEndAt) && dayjs().isBefore(product.saleEndAt);
 
@@ -53,6 +58,24 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
   const handleQuantityChange = useCallback((value: number) => {
     setQuantity(value);
   }, []);
+
+  const onAddProductToCart = useCallback(() => {
+    const cartAvailable = cart?.products.find(item => item.id === product.id);
+    let _quantity: number = quantity;
+
+    if (cartAvailable) {
+      _quantity += cartAvailable.quantity;
+    }
+
+    updateCart({
+      cartProducts: [
+        {
+          id: product.id,
+          quantity: _quantity,
+        },
+      ],
+    });
+  }, [cart, product, quantity, updateCart]);
 
   return (
     <div className="xl:mx-auto xl:max-w-[1080px]">
@@ -96,15 +119,21 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
             </div>
           )}
 
-          <div className="mt-3 flex items-stretch gap-2 md:flex-wrap">
+          <div
+            className={clsx("mt-3 flex items-stretch gap-2 md:flex-wrap", {
+              "md:flex-nowrap": isLoading,
+            })}
+          >
             <QuantityInput value={quantity} onChange={handleQuantityChange} />
             <Button
-              className="min-h-[40px] rounded-[7px] bg-green-300 px-2 uppercase text-white"
+              className="flex min-h-[40px] items-center whitespace-nowrap rounded-[7px] bg-green-300 px-2 uppercase text-white hover:opacity-75"
               disabled={product.inventory < quantity}
+              onClick={onAddProductToCart}
             >
+              {isLoading && <FaSpinner className="animate-spin" />}
               Thêm vào giỏ
             </Button>
-            <Button className="min-h-[40px] rounded-[7px] bg-red-300 px-2 uppercase text-white">
+            <Button className="min-h-[40px] whitespace-nowrap rounded-[7px] bg-red-300 px-2 uppercase text-white hover:opacity-75">
               Mua ngay
             </Button>
           </div>

@@ -8,6 +8,7 @@ import "./globals.css";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { AppProvider } from "@/providers/appProvider";
+import { PaymentProvider } from "@/providers/paymentProvider";
 import QueryProvider from "@/providers/queryClientProvider";
 
 const lora = Lora({ subsets: ["latin"] });
@@ -22,11 +23,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <QueryProvider>
       <html lang="en">
         <AppProvider>
-          <body className={clsx(lora.className, "bg-white")}>
-            <Header />
-            <main>{children}</main>
-            <Footer />
-          </body>
+          <PaymentProvider>
+            <body className={clsx(lora.className, "bg-white")}>
+              <Header />
+              <main>{children}</main>
+              <Footer />
+            </body>
+          </PaymentProvider>
         </AppProvider>
       </html>
     </QueryProvider>

@@ -27,9 +27,9 @@ export const axiosInstance = axios.create({
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const token = getCookie(ETokenName.ACCESS_TOKEN);
-  if (token) {
-    config.headers.authorization = `Bearer ${token}`;
-  }
+  // if (token) {
+  config.headers.authorization = `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InNpbTEifQ.eyJlbWFpbCI6InRyb25nQGdtYWlsLmNvbSIsImlkIjoiNDQ4N2FiZjQtMDE2YS00OGFkLTliYjQtZTRlYjE3OWYyMzhlIiwicm9sZXMiOlsiYWRtaW4iXSwiaWF0IjoxNjg3NDM4NjIyLCJleHAiOjE2ODc2MTE0MjJ9.VEEwiJRs2It5qgjhgZ25hfwhtFhJet4tpIQRQzGzHaI"}`;
+  // }
   config.headers.Accept = "application/json";
 
   return config;

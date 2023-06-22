@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 
+import { PATH } from "@/configs/path.config";
 import { TCategory } from "@/types/category";
 
 interface IOtherListCategoriesProps {
@@ -25,7 +26,7 @@ const OtherListCategories: FC<IOtherListCategoriesProps> = ({ listCategories }) 
             { "lg:col-span-2 lg:row-span-2 xl:col-span-1 xl:row-span-1": index === 2 },
             { "lg:col-span-4 lg:row-span-2 xl:col-span-1 xl:row-span-1": index === 4 }
           )}
-          href={`/danh-muc-san-pham/${category.slug ?? ""}`}
+          href={`${PATH.DANH_MUC_SAN_PHAM}/${category.slug ?? ""}`}
           key={category.slug}
         >
           <Image

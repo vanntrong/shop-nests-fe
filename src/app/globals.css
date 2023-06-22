@@ -73,4 +73,8 @@
   .pagination-item.active {
     @apply bg-primary font-medium text-white;
   }
+
+  .section-min-height {
+    min-height: calc(100vh - 130px - 337px);
+  }
 }

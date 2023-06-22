@@ -21,6 +21,10 @@ export type TProduct = {
   deletedAt: string | null;
 };
 
+export type TProductWithQuantity = TProduct & {
+  quantity: number;
+};
+
 export type TProductList = {
   title: string;
   variant: TVariant[] | null;

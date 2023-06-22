@@ -2,9 +2,9 @@ import dayjs from "dayjs";
 import { isNil } from "lodash";
 import Image from "next/image";
 import Link from "next/link";
-import React, { ComponentProps, FC } from "react";
+import { ComponentProps, FC } from "react";
 
-import Button from "@/components/button";
+import { PATH } from "@/configs/path.config";
 import { TProduct } from "@/modules/product/types/product.type";
 import { calculateSale, numberToVND } from "@/utils/number";
 
@@ -17,7 +17,7 @@ const ProductCard: FC<IProductCardProps> = ({ product, ...props }) => {
     !isNil(product.salePrice) && !isNil(product.saleEndAt) && dayjs().isBefore(product.saleEndAt);
 
   return (
-    <Link href={`/san-pham/${product.slug}`}>
+    <Link href={`${PATH.SAN_PHAM}/${product.slug}`}>
       <div
         className="product-card-shadow flex h-full flex-col border border-gray-200 bg-white"
         {...props}
@@ -48,10 +48,6 @@ const ProductCard: FC<IProductCardProps> = ({ product, ...props }) => {
               <p>Giảm {calculateSale(product.price, product.salePrice ?? 0)}%</p>
             </div>
           )}
-
-          <Button className="before:l-0 relative mx-auto mt-3 block w-fit pb-1 text-xs font-bold text-primary before:absolute before:bottom-0 before:h-[2px] before:w-full before:bg-primary before:opacity-30 before:content-['']">
-            Thêm vào giỏ
-          </Button>
         </div>
       </div>
     </Link>

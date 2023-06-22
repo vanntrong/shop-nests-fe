@@ -1,7 +1,36 @@
-import Button from "@/components/button";
+"use client";
+
+import clsx from "clsx";
+import { FC, useMemo } from "react";
+
 import "./index.css";
 
-const PaymentInfo = () => {
+import Button from "@/components/button";
+import { TProductWithQuantity } from "@/modules/product/types/product.type";
+import { TPaymentInfo } from "@/providers/paymentProvider";
+import { numberToVND } from "@/utils/number";
+
+interface IPaymentInfoProps {
+  paymentInfo: TPaymentInfo;
+  products: TProductWithQuantity[];
+}
+
+const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
+  const totalValue = useMemo(() => {
+    const value =
+      products.reduce((total, product) => {
+        return total + product.price * product.quantity;
+      }, 0) ?? 0;
+
+    return value;
+  }, [products]);
+
+  const total = useMemo(() => {
+    if (paymentInfo.totalValueAfterPromotion) return paymentInfo.totalValueAfterPromotion;
+
+    return totalValue;
+  }, [paymentInfo.totalValueAfterPromotion, totalValue]);
+
   return (
     <div className="pb-7">
       <div className="payment-info bg-[rgba(0,0,0,.02)] p-7">
@@ -16,33 +45,56 @@ const PaymentInfo = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="payment-product-name product-name py-[15px]">
-                    Yến Tinh Chế Vụn 50gr&nbsp;{" "}
-                    <strong className="product-quantity">×&nbsp;2</strong>{" "}
-                  </td>
-                  <td className="payment-product-total ">
-                    <span>
-                      <bdi>
-                        3.200.000
-                        <span>₫</span>
-                      </bdi>
-                    </span>
-                  </td>
-                </tr>
+                {products.map(product => (
+                  <tr key={product.id}>
+                    <td className="payment-product-name product-name py-[15px]">
+                      {product.name}
+                      <strong className="product-quantity"> ×&nbsp;{product.quantity}</strong>{" "}
+                    </td>
+                    <td className="payment-product-total ">
+                      <span>
+                        <bdi>{numberToVND(product.price * product.quantity)}</bdi>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
               <tfoot>
                 <tr>
                   <th className="p-2 pl-0">Tạm tính</th>
                   <td className="p-2 pr-0">
-                    <span>
-                      <bdi>
-                        3.200.000
-                        <span>₫</span>
-                      </bdi>
+                    <span
+                      className={clsx({
+                        "before:center-by-position relative opacity-60 before:h-[1px] before:w-full before:bg-black-900 before:content-['']":
+                          paymentInfo.totalValueAfterPromotion,
+                      })}
+                    >
+                      <bdi>{numberToVND(totalValue)}</bdi>
                     </span>
                   </td>
                 </tr>
+
+                {paymentInfo.totalValueAfterPromotion && (
+                  <tr>
+                    <th className="p-2 pl-0">Giá giảm</th>
+                    <td className="p-2 pr-0">
+                      <span>
+                        <bdi>{numberToVND(paymentInfo.totalValueAfterPromotion)}</bdi>
+                      </span>
+                    </td>
+                  </tr>
+                )}
+
+                {paymentInfo.promotionCode && (
+                  <tr>
+                    <th className="p-2 pl-0">Mã đã sử dụng</th>
+                    <td className="p-2 pr-0">
+                      <span>
+                        <bdi className="font-bold">{paymentInfo.promotionCode}</bdi>
+                      </span>
+                    </td>
+                  </tr>
+                )}
                 <tr>
                   <td className="py-2" colSpan={2}>
                     <table className="table-no-border w-full">
@@ -50,7 +102,9 @@ const PaymentInfo = () => {
                         <tr>
                           <th>Giao hàng</th>
                           <td data-title="Giao hàng">
-                            <span>MIỄN PHÍ</span>
+                            <span>
+                              {(paymentInfo.isFreeShip || totalValue > 2000000) && "MIỄN PHÍ"}
+                            </span>
                           </td>
                         </tr>
                       </tbody>
@@ -62,7 +116,7 @@ const PaymentInfo = () => {
                   <td>
                     <strong>
                       <span>
-                        <bdi>3.200.000đ</bdi>
+                        <bdi>{numberToVND(total)}</bdi>
                       </span>
                     </strong>
                   </td>

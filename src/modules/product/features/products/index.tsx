@@ -9,6 +9,7 @@ import Button from "@/components/button";
 import FilterPrice from "@/components/filterPrice";
 import Pagination from "@/components/pagination";
 import Sidebar from "@/components/sidebar";
+import { PATH } from "@/configs/path.config";
 import ProductCardRecentView from "@/modules/product/components/productCardRecentView";
 import { TProduct } from "@/modules/product/types/product.type";
 import { TCategory } from "@/types/category";
@@ -49,7 +50,7 @@ const Products: FC<IProductsProps> = ({ category, products }) => {
     }
     breadcrumbData.push({
       name: category.name,
-      href: `/danh-muc-san-pham/${category.slug}`,
+      href: `${PATH.DANH_MUC_SAN_PHAM}/${category.slug}`,
     });
     return;
   };

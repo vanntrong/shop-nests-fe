@@ -6,6 +6,7 @@ import { FC } from "react";
 import { GoArrowDown, GoArrowRight } from "react-icons/go";
 
 import Button from "@/components/button";
+import { PATH } from "@/configs/path.config";
 import { TCategory } from "@/types/category";
 
 import NavigationSubMenu from "../navigationSubMenu";
@@ -35,7 +36,7 @@ const NavigationItem: FC<INavigationItemProps> = ({ nav, variant = "header" }) =
             "justify-center": variant === "header",
           })}
         >
-          <Link href={`/danh-muc-san-pham/${nav.slug}`}>
+          <Link href={`${PATH.DANH_MUC_SAN_PHAM}/${nav.slug}`}>
             <span
               className={clsx("block text-sm font-normal 2xl:whitespace-nowrap", {
                 "text-left text-black": variant === "sidebar",

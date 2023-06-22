@@ -2,6 +2,8 @@
 
 import React, { createContext, useMemo } from "react";
 
+import { TGetCartResponse } from "@/apis/cart/getCart";
+import useGetCart from "@/modules/cart/services/useGetCart";
 import useGetCategories from "@/modules/home/features/services/useGetCategories";
 import { TCategory } from "@/types/category";
 
@@ -9,6 +11,7 @@ interface IAppContext {
   categories: TCategory[];
   sidebarCategories: TCategory[];
   orderCategories: TCategory[];
+  cart?: TGetCartResponse;
 }
 
 export const AppContext = createContext<IAppContext>({
@@ -26,6 +29,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     minLevel: 1,
   });
 
+  const { data: cartData } = useGetCart();
+
   const [sidebarCategories, orderCategories] = useMemo(() => {
     const sidebar: TCategory[] = [];
     const order: TCategory[] = [];
@@ -42,7 +47,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, [data]);
 
   return (
-    <AppContext.Provider value={{ categories: data, sidebarCategories, orderCategories }}>
+    <AppContext.Provider
+      value={{ categories: data, sidebarCategories, orderCategories, cart: cartData?.data }}
+    >
       {children}
     </AppContext.Provider>
   );

@@ -6,6 +6,7 @@ import { FC } from "react";
 import { GoArrowRight } from "react-icons/go";
 
 import Button from "@/components/button";
+import { PATH } from "@/configs/path.config";
 import { TCategory } from "@/types/category";
 
 interface INavigationSubItemProps {
@@ -17,7 +18,7 @@ const NavigationSubItem: FC<INavigationSubItemProps> = ({ nav }) => {
     <div className={clsx("group/item relative px-3")}>
       <Button className="w-full">
         <div className="group/sub flex items-center justify-between">
-          <Link href={`/danh-muc-san-pham/${nav.slug}`}>
+          <Link href={`${PATH.DANH_MUC_SAN_PHAM}/${nav.slug}`}>
             <span className="text-sm font-normal group-hover/sub:text-primary">{nav.name}</span>
           </Link>
           {nav.subCategories && nav.subCategories.length > 0 && (
@@ -37,7 +38,7 @@ const NavigationSubItem: FC<INavigationSubItemProps> = ({ nav }) => {
         >
           {nav.subCategories.map(child => (
             <Link
-              href={`/danh-muc-san-pham/${child.slug}`}
+              href={`${PATH.DANH_MUC_SAN_PHAM}/${child.slug}`}
               key={child.name}
               className="hover:text-primary"
             >
