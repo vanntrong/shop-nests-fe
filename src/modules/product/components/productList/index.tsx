@@ -43,11 +43,11 @@ const ProductList: FC<IProductListProps> = ({ variants, title, products, variant
         )}
       </div>
 
-      {variantTitle && variants && (
+      {variantTitle && variants && variants?.length > 1 && (
         <h4 className="w-full text-center text-lg font-normal uppercase">{variantTitle}</h4>
       )}
 
-      {variants && (
+      {variants && variants.length > 1 && (
         <div className="flex-center mt-2 gap-3">
           {variants.map(variant => (
             <ButtonVariant

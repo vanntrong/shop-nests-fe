@@ -12,7 +12,7 @@ import useGetPromotion from "@/modules/promotion/services/useGetPromotion";
 import { useAppContext } from "@/providers/appProvider";
 import { usePaymentContext } from "@/providers/paymentProvider";
 import { numberToCurrency } from "@/utils/currency";
-import { numberToVND } from "@/utils/number";
+import { getPriceAfterSale, numberToVND } from "@/utils/number";
 
 const CartInfo = () => {
   const { cart } = useAppContext();
@@ -30,7 +30,8 @@ const CartInfo = () => {
   const totalValue = useMemo(() => {
     const value =
       cart?.products.reduce((total, product) => {
-        return total + product.price * product.quantity;
+        const price = getPriceAfterSale(product.price, product.salePrice, product.saleEndAt);
+        return total + price * product.quantity;
       }, 0) ?? 0;
 
     return value;

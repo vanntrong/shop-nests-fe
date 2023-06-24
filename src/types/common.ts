@@ -6,8 +6,8 @@ export type TMonthYear = {
 export type T = any;
 
 export enum ETokenName {
-  ACCESS_TOKEN = "access-token",
-  REFRESH_TOKEN = "refresh-token",
+  ACCESS_TOKEN = "access_token",
+  REFRESH_TOKEN = "refresh_token",
 }
 
 export interface IPaginationResponse<T> {

@@ -10,7 +10,7 @@ import useCountPoint from "@/modules/order/services/useCountPoint";
 import { TProductWithQuantity } from "@/modules/product/types/product.type";
 import { TPaymentInfo } from "@/providers/paymentProvider";
 import { numberToCurrency } from "@/utils/currency";
-import { numberToVND } from "@/utils/number";
+import { getPriceAfterSale, numberToVND } from "@/utils/number";
 
 interface IPaymentInfoProps {
   paymentInfo: TPaymentInfo;
@@ -21,7 +21,8 @@ const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
   const totalValue = useMemo(() => {
     const value =
       products.reduce((total, product) => {
-        return total + product.price * product.quantity;
+        const price = getPriceAfterSale(product.price, product.salePrice, product.saleEndAt);
+        return total + price * product.quantity;
       }, 0) ?? 0;
 
     return value;
@@ -60,7 +61,12 @@ const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
                     </td>
                     <td className="payment-product-total ">
                       <span>
-                        <bdi>{numberToVND(product.price * product.quantity)}</bdi>
+                        <bdi>
+                          {numberToVND(
+                            getPriceAfterSale(product.price, product.salePrice, product.saleEndAt) *
+                              product.quantity
+                          )}
+                        </bdi>
                       </span>
                     </td>
                   </tr>

@@ -17,7 +17,6 @@ const useGetCategories = (
     () =>
       axiosInstance.get("/categories", {
         params: { ...params },
-        baseURL: "http://localhost:8080/api/v1",
       }),
     options
   );

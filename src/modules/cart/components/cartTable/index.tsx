@@ -11,7 +11,7 @@ import QuantityInput from "@/components/quantityInput";
 import { PATH } from "@/configs/path.config";
 import useUpdateCart from "@/modules/cart/services/useUpdateCart";
 import { TProductWithQuantity } from "@/modules/product/types/product.type";
-import { numberToVND } from "@/utils/number";
+import { getPriceAfterSale, numberToVND } from "@/utils/number";
 
 interface ICartTableProps {
   products: TProductWithQuantity[];
@@ -86,8 +86,15 @@ const CartTable: FC<ICartTableProps> = ({ products }) => {
                       </Link>
                     </div>
                   </td>
+                  {product.quantity > product.inventory && (
+                    <p className="mb-2 ml-4 text-xs text-red-500">
+                      Sản phẩm này chỉ còn {product.inventory} mặt hàng
+                    </p>
+                  )}
                   <td className="whitespace-nowrap px-3 py-2 text-sm font-medium">
-                    {numberToVND(product.price)}
+                    {numberToVND(
+                      getPriceAfterSale(product.price, product.salePrice, product.saleEndAt)
+                    )}
                   </td>
                   <td className="whitespace-nowrap px-3 py-2">
                     <QuantityInput
@@ -96,7 +103,10 @@ const CartTable: FC<ICartTableProps> = ({ products }) => {
                     />
                   </td>
                   <td className="whitespace-nowrap px-3 py-2 text-sm font-medium">
-                    {numberToVND(product.price * product.quantity)}
+                    {numberToVND(
+                      getPriceAfterSale(product.price, product.salePrice, product.saleEndAt) *
+                        product.quantity
+                    )}
                   </td>
                 </tr>
               ))}

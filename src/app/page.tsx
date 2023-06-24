@@ -37,7 +37,12 @@ const Home = async () => {
                 value: sub.slug,
               }))
               .sort((a, b) => a.title.localeCompare(b.title))
-          : null;
+          : [
+              {
+                title: category.name,
+                value: category.slug,
+              },
+            ];
 
       return {
         products,
