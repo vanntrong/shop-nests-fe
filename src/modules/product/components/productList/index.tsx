@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 
 import { TGetAllProductsParams } from "@/apis/product/getAllProducts";
 import { TProduct } from "@/modules/product/types/product.type";
@@ -32,10 +32,6 @@ const ProductList: FC<IProductListProps> = ({ variants, title, products, variant
       initialData: products,
     }
   );
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return (
     <div>

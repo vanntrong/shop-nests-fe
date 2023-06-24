@@ -49,7 +49,6 @@ const Payment = () => {
         quantity: product.quantity,
       })) ?? [];
 
-    console.log(formData);
     mutate({
       ...formData,
       products,
