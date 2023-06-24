@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FC, useCallback } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { FaSpinner } from "react-icons/fa";
@@ -17,6 +18,7 @@ interface ICartTableProps {
 }
 
 const CartTable: FC<ICartTableProps> = ({ products }) => {
+  const navigate = useRouter();
   const { mutate: updateCart, isLoading } = useUpdateCart();
 
   const deleteProductFromCart = useCallback(
@@ -70,7 +72,7 @@ const CartTable: FC<ICartTableProps> = ({ products }) => {
             <tbody>
               {products.map(product => (
                 <tr className="border-b border-neutral-200" key={product.id}>
-                  <td className="flex items-center gap-2 px-3 py-2">
+                  <td className="flex w-[60vw] items-center gap-2 px-3 py-2 md:w-[unset]">
                     <Button className="group" onClick={() => deleteProductFromCart(product.id)}>
                       <AiOutlineCloseCircle
                         size={18}
@@ -101,6 +103,13 @@ const CartTable: FC<ICartTableProps> = ({ products }) => {
             </tbody>
           </table>
         </div>
+
+        <Button
+          className="ml-auto mt-3 block w-fit rounded-md bg-primary px-2 py-2 text-sm font-medium text-white hover:opacity-75 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50"
+          onClick={() => navigate.push(PATH.HOME)}
+        >
+          Tiếp tục mua sắm
+        </Button>
       </div>
 
       {isLoading && (

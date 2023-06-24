@@ -11,6 +11,7 @@ import { PATH } from "@/configs/path.config";
 import useGetPromotion from "@/modules/promotion/services/useGetPromotion";
 import { useAppContext } from "@/providers/appProvider";
 import { usePaymentContext } from "@/providers/paymentProvider";
+import { numberToCurrency } from "@/utils/currency";
 import { numberToVND } from "@/utils/number";
 
 const CartInfo = () => {
@@ -87,7 +88,9 @@ const CartInfo = () => {
       <div className="mt-2 flex items-center justify-between">
         <h4 className="text-xs text-gray-500">Giao hàng</h4>
         <span className="text-xs text-gray-500">
-          {(reduce?.isFreeShip || totalValue > 2000000) && "Miễn phí"}
+          {reduce?.isFreeShip || totalValue > numberToCurrency(2, "million")
+            ? "Miễn phí"
+            : numberToVND(numberToCurrency(30, "thousand"))}
         </span>
       </div>
 
@@ -95,13 +98,14 @@ const CartInfo = () => {
 
       <div className="mt-2 flex items-center justify-between">
         <h4 className="text-sm">Tổng</h4>
-        <span className="text-sm">{numberToVND(totalValue ?? 0)}</span>
+        <span className="text-sm">{numberToVND(totalValueAfterPromotion ?? totalValue ?? 0)}</span>
       </div>
 
       <div className="mt-6">
         <Button
-          className="w-full rounded-md bg-green-500 py-2 text-sm font-medium text-white hover:opacity-75"
+          className="w-full rounded-md bg-green-500 py-2 text-sm font-medium text-white hover:opacity-75 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50"
           onClick={navigateToPayment}
+          disabled={!cart?.products.length}
         >
           Thanh toán
         </Button>

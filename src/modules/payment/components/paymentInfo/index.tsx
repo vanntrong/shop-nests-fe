@@ -6,8 +6,10 @@ import { FC, useMemo } from "react";
 import "./index.css";
 
 import Button from "@/components/button";
+import useCountPoint from "@/modules/order/services/useCountPoint";
 import { TProductWithQuantity } from "@/modules/product/types/product.type";
 import { TPaymentInfo } from "@/providers/paymentProvider";
+import { numberToCurrency } from "@/utils/currency";
 import { numberToVND } from "@/utils/number";
 
 interface IPaymentInfoProps {
@@ -24,6 +26,11 @@ const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
 
     return value;
   }, [products]);
+
+  const { data: { data: { pointEarned = 0 } = {} } = {} } = useCountPoint(
+    { total: totalValue },
+    { enabled: !!totalValue }
+  );
 
   const total = useMemo(() => {
     if (paymentInfo.totalValueAfterPromotion) return paymentInfo.totalValueAfterPromotion;
@@ -103,7 +110,9 @@ const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
                           <th>Giao hàng</th>
                           <td data-title="Giao hàng">
                             <span>
-                              {(paymentInfo.isFreeShip || totalValue > 2000000) && "MIỄN PHÍ"}
+                              {(paymentInfo.isFreeShip ||
+                                totalValue > numberToCurrency(2, "million")) &&
+                                "MIỄN PHÍ"}
                             </span>
                           </td>
                         </tr>
@@ -111,6 +120,22 @@ const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
                     </table>
                   </td>
                 </tr>
+                {pointEarned > 0 && (
+                  <tr>
+                    <td className="py-2" colSpan={2}>
+                      <table className="table-no-border w-full">
+                        <tbody>
+                          <tr>
+                            <th>Điểm thưởng sẽ nhận</th>
+                            <td data-title="Giao hàng">
+                              <span>{pointEarned}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                )}
                 <tr>
                   <th className="py-2">Tổng</th>
                   <td>
@@ -142,25 +167,9 @@ const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
                   </div>
                 </li>
               </ul>
-              <div className="mt-6">
-                <div>
-                  <input type="checkbox" className="mr-2" name="terms" id="terms" />
-                  <span className="text-sm font-bold text-[#222]">
-                    Tôi đã đọc và đồng ý với{" "}
-                    <a
-                      href="https://toyenkhanhhoa.vn/chinh-sach-bao-mat-thong-tin/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      điều khoản và điều kiện
-                    </a>{" "}
-                    của website
-                  </span>
-                  &nbsp;<span className="required">*</span>
-                  <input type="hidden" name="terms-field" defaultValue={1} />
-                </div>
+              <div className="mt-4">
                 <Button
-                  className="mt-3 rounded-md bg-green-300 px-1 py-2 text-sm text-white"
+                  className="rounded-md bg-green-300 px-1 py-2 text-sm text-white"
                   id="place_order"
                   value="Đặt hàng"
                   data-value="Đặt hàng"
@@ -171,11 +180,6 @@ const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
                 </Button>
               </div>
             </div>
-          </div>
-          <div className="mt-3">
-            <p className="text-sm">
-              Thông tin cá nhân của bạn sẽ được bảo mật và chỉ được sử dụng để xử lý đơn hàng.
-            </p>
           </div>
         </div>
       </div>
