@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { isNil } from "lodash";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 
 import Breadcrumb from "@/components/breadrcumb";
 import Button from "@/components/button";
@@ -30,9 +30,11 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const { cart } = useAppContext();
   const { user } = useAuthContext();
-  const { mutate: updateCart, isLoading } = useUpdateCart();
+  const [isAnimationStart, setIsAnimationStart] = useState<boolean>(false);
+  const { mutate: updateCart, isLoading, isSuccess } = useUpdateCart();
   const { mutate: buyNow, isLoading: isBuyNowLoading } = useUpdateCart();
   const navigate = useRouter();
+  const cartRef = useRef<HTMLDivElement>(null);
 
   const isSaleAvailable =
     !isNil(product.salePrice) && !isNil(product.saleEndAt) && dayjs().isBefore(product.saleEndAt);
@@ -81,6 +83,34 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
     onAddProductToCart(buyNow);
     navigate.push(PATH.GIO_HANG);
   }, [onAddProductToCart, navigate, buyNow]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setIsAnimationStart(true);
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (!isAnimationStart) return;
+
+    const cart = document.getElementById("cart");
+    const cartRect = cart?.getBoundingClientRect();
+
+    if (cartRect && cartRef.current) {
+      const translateX = cartRect.x - cartRef.current.getBoundingClientRect().x;
+      const translateY = cartRect.y - cartRef.current.getBoundingClientRect().y;
+
+      cartRef.current?.setAttribute(
+        "style",
+        `transform: translate(${translateX}px, ${translateY}px);`
+      );
+
+      setTimeout(() => {
+        cartRef.current?.removeAttribute("style");
+        setIsAnimationStart(false);
+      }, 1000);
+    }
+  }, [isAnimationStart]);
 
   return (
     <div className="xl:mx-auto xl:max-w-[1080px]">
@@ -135,12 +165,20 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
               <>
                 <QuantityInput value={quantity} onChange={handleQuantityChange} />
                 <Button
-                  className="flex min-h-[40px] items-center whitespace-nowrap rounded-[7px] bg-green-300 px-2 uppercase text-white hover:opacity-75 disabled:cursor-not-allowed"
+                  className="relative flex min-h-[40px] items-center whitespace-nowrap rounded-[7px] bg-green-300 px-2 uppercase text-white hover:opacity-75 disabled:cursor-not-allowed"
                   disabled={product.inventory < quantity}
                   onClick={() => onAddProductToCart(updateCart)}
                   isLoading={isLoading}
                 >
                   Thêm vào giỏ
+                  {isAnimationStart && (
+                    <div
+                      className="add-to-cart absolute -right-2 -top-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-400 text-[10px] font-bold text-white"
+                      ref={cartRef}
+                    >
+                      {1}
+                    </div>
+                  )}
                 </Button>
                 <Button
                   className="min-h-[40px] whitespace-nowrap rounded-[7px] bg-red-300 px-2 uppercase text-white hover:opacity-75"
