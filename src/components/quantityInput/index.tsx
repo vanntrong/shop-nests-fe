@@ -38,7 +38,7 @@ const QuantityInput: FC<IQuantityInputProps> = props => {
       </Button>
       <input
         type="number"
-        className="w-6 border border-solid border-[#ddd] py-1 text-center"
+        className="input-hide-arrow w-6 border border-solid border-[#ddd] py-1 text-center"
         value={value}
         onChange={handleInputChange}
       />

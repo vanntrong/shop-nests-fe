@@ -1,42 +1,58 @@
 "use client";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import Input from "@/components/input";
 import Select from "@/components/select";
-import { TOption } from "@/components/select/option.type";
 import Textarea from "@/components/textarea";
 import {
   TCreatePaymentData,
   createPaymentSchema,
 } from "@/modules/payment/validations/createPayment";
-
-const cityOptions: TOption[] = [
-  {
-    label: "Hà Nội",
-    value: "hanoi",
-  },
-  {
-    label: "Hồ Chí Minh",
-    value: "hochiminh",
-  },
-];
+import { TDistrict, TProvince, TWard } from "@/modules/province/types/province.type";
 
 interface ICreatePaymentFormProps {
   onSubmit: (data: TCreatePaymentData) => void;
+  onChangeProvince: (provinceCode: number) => void;
+  onChangeDistrict: (districtCode: number) => void;
+  provinces: TProvince[];
+  districts: TDistrict[];
+  wards: TWard[];
 }
 
 const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
-  const { onSubmit: _onSubmit } = props;
+  const {
+    onSubmit: _onSubmit,
+    provinces,
+    onChangeProvince,
+    districts,
+    onChangeDistrict,
+    wards,
+  } = props;
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<TCreatePaymentData>({
     resolver: yupResolver(createPaymentSchema),
   });
+  const provinceWatch = watch("province");
+  const districtWatch = watch("district");
+
+  useEffect(() => {
+    if (!provinceWatch) return;
+    const province = JSON.parse(provinceWatch);
+    onChangeProvince(Number(province.code));
+  }, [provinceWatch, onChangeProvince]);
+
+  useEffect(() => {
+    if (!districtWatch) return;
+    const district = JSON.parse(districtWatch);
+    onChangeDistrict(Number(district.code));
+  }, [districtWatch, onChangeDistrict]);
 
   const onSubmit = useCallback(
     (data: TCreatePaymentData) => {
@@ -44,8 +60,6 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
     },
     [_onSubmit]
   );
-
-  console.log(errors);
 
   return (
     <form
@@ -93,9 +107,12 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
             required
             label="Tỉnh/Thành phố"
             placeholder="Tỉnh/Thành phố của bạn"
-            options={cityOptions}
-            {...register("city")}
-            error={errors.city?.message}
+            options={provinces.map(province => ({
+              label: province.name,
+              value: JSON.stringify({ code: province.code, name: province.name }),
+            }))}
+            {...register("province")}
+            error={errors.province?.message}
           />
         </div>
         <div className="w-full">
@@ -104,7 +121,10 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
             required
             label="Quận/Huyện"
             placeholder="Quận/Huyện của bạn"
-            options={cityOptions}
+            options={districts.map(district => ({
+              label: district.name,
+              value: JSON.stringify({ code: district.code, name: district.name }),
+            }))}
             {...register("district")}
             error={errors.district?.message}
           />
@@ -117,7 +137,10 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
             required
             label="Phường/Xã"
             placeholder="Phường/Xã của bạn"
-            options={cityOptions}
+            options={wards.map(ward => ({
+              label: ward.name,
+              value: ward.code,
+            }))}
             {...register("ward")}
             error={errors.ward?.message}
           />

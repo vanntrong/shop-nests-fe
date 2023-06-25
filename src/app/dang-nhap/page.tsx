@@ -1,7 +1,9 @@
 import React from "react";
 
+import Login from "@/modules/auth/features/login";
+
 const Index = () => {
-  return <div>Index</div>;
+  return <Login />;
 };
 
 export default Index;

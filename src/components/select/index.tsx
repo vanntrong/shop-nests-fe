@@ -40,7 +40,7 @@ const Select = forwardRef<HTMLSelectElement, ISelectProps>((props, ref) => {
           </option>
         ))}
       </select>
-      {error && <span className="absolute bottom-0 left-0 text-sm text-red-500">{error}</span>}
+      {error && <span className="mt-3 text-sm text-red-500">{error}</span>}
     </div>
   );
 });

@@ -5,4 +5,14 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 });
 module.exports = withBundleAnalyzer({
   // your Next.js configuration
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "toyenkhanhhoa.vn",
+        port: "",
+        pathname: "/**/*",
+      },
+    ],
+  },
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 
 const saleTime = new Date(Date.now() + 60 * 60 * 24 * 2 * 1000).getTime();
 
@@ -20,8 +20,13 @@ const getTime = (time: number): TTime => {
   return { day, hour, minute, second };
 };
 
-const CountDownBanner = () => {
-  const [time, setTime] = useState<TTime>(getTime(saleTime - Date.now()));
+interface ICountDownBannerProps {
+  end: string;
+}
+
+const CountDownBanner: FC<ICountDownBannerProps> = ({ end }) => {
+  const saleEnd = new Date(end).getTime();
+  const [time, setTime] = useState<TTime>(getTime(saleEnd - Date.now()));
 
   useEffect(() => {
     const timer = setInterval(() => {

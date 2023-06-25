@@ -1,14 +1,13 @@
-import clsx from "clsx";
-import "./globals.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { Lora } from "next/font/google";
 import React from "react";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import "./globals.css";
 
-import Footer from "@/components/footer";
-import Header from "@/components/header";
-
-const lora = Lora({ subsets: ["latin"] });
+import { AppProvider } from "@/providers/appProvider";
+import { AuthProvider } from "@/providers/authProvider";
+import LayoutProvider from "@/providers/layoutProvider";
+import { PaymentProvider } from "@/providers/paymentProvider";
+import QueryProvider from "@/providers/queryClientProvider";
 
 export const metadata = {
   title: "Create Next App",
@@ -17,14 +16,16 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={clsx(lora.className, "bg-white")}>
-        <Header />
-
-        <main>{children}</main>
-
-        <Footer />
-      </body>
-    </html>
+    <QueryProvider>
+      <html lang="en">
+        <AppProvider>
+          <PaymentProvider>
+            <AuthProvider>
+              <LayoutProvider>{children}</LayoutProvider>
+            </AuthProvider>
+          </PaymentProvider>
+        </AppProvider>
+      </html>
+    </QueryProvider>
   );
 }

@@ -1,35 +1,62 @@
-import React, { FC } from "react";
+"use client";
+
+import { FC, useState } from "react";
 import { IoFilter } from "react-icons/io5";
 
-import { IProductsPageProps } from "@/app/danh-muc-san-pham/[type]/[subType]/page";
+import { TGetAllProductsParams } from "@/apis/product/getAllProducts";
 import Breadcrumb from "@/components/breadrcumb";
 import Button from "@/components/button";
 import FilterPrice from "@/components/filterPrice";
+import Pagination from "@/components/pagination";
 import Sidebar from "@/components/sidebar";
+import { PATH } from "@/configs/path.config";
 import ProductCardRecentView from "@/modules/product/components/productCardRecentView";
-import ProductList from "@/modules/product/components/productList";
+import { TProduct } from "@/modules/product/types/product.type";
+import { TCategory } from "@/types/category";
+import { IPaginationResponse } from "@/types/common";
 
-type TProductsProps = IProductsPageProps;
+import ProductCard from "../../components/productCard";
+import useGetProducts from "../../services/useGetProducts";
 
-const Products: FC<TProductsProps> = () => {
+interface IProductsProps {
+  category: TCategory;
+  products: IPaginationResponse<TProduct>;
+}
+
+const Products: FC<IProductsProps> = ({ category, products }) => {
+  const [params, setParams] = useState<TGetAllProductsParams>({
+    category: category.slug,
+    offset: 0,
+    limit: 10,
+  });
+  const { data } = useGetProducts(params, {
+    initialData: products,
+  });
+
   const breadcrumbData = [
     {
       name: "Trang chủ",
       href: "/",
     },
     {
-      name: "Sản phẩm",
-      href: "/san-pham",
-    },
-    {
-      name: "Tổ Yến",
-      href: "/san-pham/to-yen",
-    },
-    {
-      name: "Tổ Yến Tinh Chế",
-      href: "/san-pham/to-yen/to-yen-tinh-che",
+      name: "Danh mục sản phẩm",
+      href: "#",
     },
   ];
+
+  const getParentCategory = (category: TCategory) => {
+    if (category.parentCategory) {
+      getParentCategory(category.parentCategory);
+    }
+    breadcrumbData.push({
+      name: category.name,
+      href: `${PATH.DANH_MUC_SAN_PHAM}/${category.slug}`,
+    });
+    return;
+  };
+
+  getParentCategory(category);
+
   return (
     <div className="xl:mx-auto xl:max-w-[1080px]">
       <div className="px-4 pt-4">
@@ -49,7 +76,13 @@ const Products: FC<TProductsProps> = () => {
           <div className="mt-4 px-4">
             <h3 className="text-base uppercase">Lọc theo giá</h3>
             <div className="h-[2px] w-[30px] bg-black-900"></div>
-            <FilterPrice />
+            <FilterPrice
+              onChange={(min, max) =>
+                setParams(prev => ({ ...prev, min_price: min, max_price: max }))
+              }
+              minPrice={10000}
+              maxPrice={100000000}
+            />
           </div>
 
           <div className="mt-6 px-4">
@@ -68,14 +101,26 @@ const Products: FC<TProductsProps> = () => {
         </div>
 
         <div className="lg:col-span-3">
-          <p className="px-3 text-base">
-            Là dòng yến sào được xử lý sạch lông bằng phương pháp ngâm tổ yến vào nước để làm mềm và
-            nhặt sạch lông. Sau đó tổ yến được tái tạo hình, khử trùng và sấy khô. Tổ yến sạch thành
-            phẩm sẽ được ghép lại từ nhiều tổ khác, có độ thẫm mỹ, cảm giác về độ sợi, nở ở mức
-            trung bình. Phù hợp với nhu cầu tập trung vào bồi bổ sức khỏe.
-          </p>
+          <p className="px-3 text-base">{category.description}</p>
           <div className="mt-4">
-            <ProductList />
+            <div className="mt-2 grid grid-cols-2 gap-1 sm:mt-4 sm:grid-cols-3 lg:grid-cols-4">
+              {data?.data?.map(product => (
+                <ProductCard product={product} key={product.id} />
+              ))}
+            </div>
+            {data?.total && data.total > data.limit && (
+              <div className="mt-6">
+                <Pagination
+                  pageCount={Math.ceil(data.total / data.limit)}
+                  onPageChange={event => {
+                    setParams(prev => ({
+                      ...prev,
+                      offset: event.selected * (params.limit || 10),
+                    }));
+                  }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
