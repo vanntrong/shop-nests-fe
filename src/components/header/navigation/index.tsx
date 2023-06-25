@@ -23,7 +23,7 @@ const Navigation = () => {
       ))}
       {user ? (
         <>
-          <Link className="flex items-center gap-2 pb-2" href={PATH.GIO_HANG}>
+          <Link className="flex items-center gap-2 pb-2" href={PATH.GIO_HANG} id="cart">
             <div className="relative">
               <BsCart4 color="white" size={20} />
               {cart?.products && cart.products.length > 0 && (

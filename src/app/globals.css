@@ -77,4 +77,8 @@
   .section-min-height {
     min-height: calc(100vh - 130px - 337px);
   }
+
+  .add-to-cart {
+    transition: all 1s cubic-bezier(1, 0.44, 0.84, 0.165);
+  }
 }
