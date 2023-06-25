@@ -24,7 +24,7 @@ const CartPage = () => {
 
   const isNeedBuyMore = React.useMemo(() => {
     return totalPrice < numberToCurrency(2, "million");
-  }, []);
+  }, [totalPrice]);
   return (
     <div className="section-min-height px-4 xl:mx-auto xl:max-w-[1080px]">
       {isNeedBuyMore && (

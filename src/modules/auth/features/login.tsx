@@ -1,11 +1,32 @@
+"use client";
+
+import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import React from "react";
+import { useForm } from "react-hook-form";
 
+import Button from "@/components/button";
 import Input from "@/components/input";
 import Logo from "@/components/logo";
 import { PATH } from "@/configs/path.config";
 
+import useLogin from "../services/useLogin";
+import { TLoginData, loginSchema } from "../validations/login";
+
 const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TLoginData>({
+    resolver: yupResolver(loginSchema),
+  });
+  const { mutate, isLoading } = useLogin();
+
+  const onSubmit = (data: TLoginData) => {
+    const formData = { ...data };
+    mutate(formData);
+  };
   return (
     <div className="relative h-screen xl:mx-auto xl:max-w-[1080px]">
       <div className="flex min-h-full flex-col items-center justify-center px-6 py-12 lg:px-8">
@@ -19,13 +40,13 @@ const Login = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Địa chỉ email
               </label>
               <div className="mt-2">
-                <Input id="email" />
+                <Input id="email" error={errors.email?.message} {...register("email")} />
               </div>
             </div>
 
@@ -44,17 +65,23 @@ const Login = () => {
                 </div>
               </div>
               <div className="mt-2">
-                <Input id="password" type="password" />
+                <Input
+                  id="password"
+                  type="password"
+                  error={errors.password?.message}
+                  {...register("password")}
+                />
               </div>
             </div>
 
             <div>
-              <button
+              <Button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-primary px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                isLoading={isLoading}
               >
                 Đăng nhập
-              </button>
+              </Button>
             </div>
           </form>
 
