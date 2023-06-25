@@ -5,4 +5,5 @@ export type TUser = {
   avatar: string | null;
   point: number;
   createdAt: string;
+  name: string;
 };

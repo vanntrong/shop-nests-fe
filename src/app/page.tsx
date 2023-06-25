@@ -1,7 +1,12 @@
+import { Metadata } from "next";
+
 import { getAllCategories } from "@/apis/category/getAllCategories";
 import { getAllProducts } from "@/apis/product/getAllProducts";
 import HomePage from "@/modules/home/features/home";
 import { TProductList } from "@/modules/product/types/product.type";
+import { getMetaData } from "@/utils/metadata";
+
+export const metadata: Metadata = getMetaData();
 
 const Home = async () => {
   const [{ data: categories }, { data: otherCategories }] = await Promise.all([

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC } from "react";
 
-type TBreadcrumb = {
+export type TBreadcrumb = {
   name: string;
   href: string;
 };
@@ -22,8 +22,8 @@ const Breadcrumb: FC<IBreadcrumbProps> = ({ data }) => {
       <nav className="w-full rounded-md">
         <ol className="list-reset flex flex-wrap justify-center lg:justify-start">
           {data.map((item, index) => (
-            <>
-              <li key={item.name}>
+            <div key={item.name} className="flex">
+              <li>
                 <Link
                   href={item.href}
                   className={clsx(
@@ -42,7 +42,7 @@ const Breadcrumb: FC<IBreadcrumbProps> = ({ data }) => {
                   <span className="mx-2 text-neutral-500 dark:text-neutral-400">/</span>
                 </li>
               )}
-            </>
+            </div>
           ))}
         </ol>
       </nav>
