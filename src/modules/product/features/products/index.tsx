@@ -1,31 +1,30 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { IoFilter } from "react-icons/io5";
 
 import { TGetAllProductsParams } from "@/apis/product/getAllProducts";
-import Breadcrumb from "@/components/breadrcumb";
+import Breadcrumb, { TBreadcrumb } from "@/components/breadrcumb";
 import Button from "@/components/button";
 import FilterPrice from "@/components/filterPrice";
 import Pagination from "@/components/pagination";
 import Sidebar from "@/components/sidebar";
 import { PATH } from "@/configs/path.config";
-import ProductCardRecentView from "@/modules/product/components/productCardRecentView";
+import ProductCard from "@/modules/product/components/productCard";
+import useGetProducts from "@/modules/product/services/useGetProducts";
 import { TProduct } from "@/modules/product/types/product.type";
 import { TCategory } from "@/types/category";
 import { IPaginationResponse } from "@/types/common";
 
-import ProductCard from "../../components/productCard";
-import useGetProducts from "../../services/useGetProducts";
-
 interface IProductsProps {
-  category: TCategory;
+  category?: TCategory;
   products: IPaginationResponse<TProduct>;
+  defaultBreadcrumb?: TBreadcrumb[];
 }
 
-const Products: FC<IProductsProps> = ({ category, products }) => {
+const Products: FC<IProductsProps> = ({ category, products, defaultBreadcrumb }) => {
   const [params, setParams] = useState<TGetAllProductsParams>({
-    category: category.slug,
+    category: category?.slug,
     offset: 0,
     limit: 10,
   });
@@ -33,29 +32,40 @@ const Products: FC<IProductsProps> = ({ category, products }) => {
     initialData: products,
   });
 
-  const breadcrumbData = [
-    {
-      name: "Trang chủ",
-      href: "/",
-    },
-    {
-      name: "Danh mục sản phẩm",
-      href: "#",
-    },
-  ];
+  const breadcrumbData = useMemo(
+    () =>
+      defaultBreadcrumb
+        ? defaultBreadcrumb
+        : [
+            {
+              name: "Trang chủ",
+              href: "/",
+            },
+            {
+              name: "Danh mục sản phẩm",
+              href: "#",
+            },
+          ],
+    [defaultBreadcrumb]
+  );
 
-  const getParentCategory = (category: TCategory) => {
-    if (category.parentCategory) {
-      getParentCategory(category.parentCategory);
-    }
-    breadcrumbData.push({
-      name: category.name,
-      href: `${PATH.DANH_MUC_SAN_PHAM}/${category.slug}`,
-    });
-    return;
-  };
+  const getParentCategory = useCallback(
+    (category: TCategory) => {
+      if (category.parentCategory) {
+        getParentCategory(category.parentCategory);
+      }
+      breadcrumbData.push({
+        name: category.name,
+        href: `${PATH.DANH_MUC_SAN_PHAM}/${category.slug}`,
+      });
+      return;
+    },
+    [breadcrumbData]
+  );
 
-  getParentCategory(category);
+  useEffect(() => {
+    if (category) getParentCategory(category);
+  }, [category, getParentCategory]);
 
   return (
     <div className="xl:mx-auto xl:max-w-[1080px]">
@@ -85,7 +95,7 @@ const Products: FC<IProductsProps> = ({ category, products }) => {
             />
           </div>
 
-          <div className="mt-6 px-4">
+          {/* <div className="mt-6 px-4">
             <h3 className="text-base uppercase">Mới vừa xem</h3>
             <div className="h-[2px] w-[30px] bg-black-900"></div>
             <div className="mt-4 flex flex-col gap-3">
@@ -97,18 +107,19 @@ const Products: FC<IProductsProps> = ({ category, products }) => {
               <ProductCardRecentView />
               <ProductCardRecentView />
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="lg:col-span-3">
-          <p className="px-3 text-base">{category.description}</p>
+          {category && <p className="px-3 text-base">{category.description}</p>}
           <div className="mt-4">
             <div className="mt-2 grid grid-cols-2 gap-1 sm:mt-4 sm:grid-cols-3 lg:grid-cols-4">
               {data?.data?.map(product => (
                 <ProductCard product={product} key={product.id} />
               ))}
             </div>
-            {data?.total && data.total > data.limit && (
+            {data?.data.length === 0 && <p className="px-3">Không có sản phẩm</p>}
+            {data && data.total > data.limit && (
               <div className="mt-6">
                 <Pagination
                   pageCount={Math.ceil(data.total / data.limit)}

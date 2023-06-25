@@ -4,21 +4,23 @@
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { isNil } from "lodash";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FC, useCallback, useState } from "react";
-import { FaSpinner } from "react-icons/fa";
 
 import Breadcrumb from "@/components/breadrcumb";
 import Button from "@/components/button";
 import CountDownBanner from "@/components/countDownBanner";
 import QuantityInput from "@/components/quantityInput";
-import useUpdateCart from "@/modules/cart/services/useUpdateCart";
+import { PATH } from "@/configs/path.config";
+import useUpdateCart, { TUpdateCartFN } from "@/modules/cart/services/useUpdateCart";
 import ProductCompanyIntro from "@/modules/product/components/productCompanyIntro";
+import ProductDetailDescription from "@/modules/product/components/productDetailDescription";
 import ProductDetailSlider from "@/modules/product/components/productDetailSlider";
 import { TProduct } from "@/modules/product/types/product.type";
 import { useAppContext } from "@/providers/appProvider";
+import { useAuthContext } from "@/providers/authProvider";
 import { calculateSale, numberToVND } from "@/utils/number";
-
-import ProductDetailDescription from "../../components/productDetailDescription";
 
 interface IProductDetailProps {
   product: TProduct;
@@ -27,7 +29,10 @@ interface IProductDetailProps {
 const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const { cart } = useAppContext();
+  const { user } = useAuthContext();
   const { mutate: updateCart, isLoading } = useUpdateCart();
+  const { mutate: buyNow, isLoading: isBuyNowLoading } = useUpdateCart();
+  const navigate = useRouter();
 
   const isSaleAvailable =
     !isNil(product.salePrice) && !isNil(product.saleEndAt) && dayjs().isBefore(product.saleEndAt);
@@ -38,8 +43,12 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
       href: "/",
     },
     {
+      name: "Sản phẩm",
+      href: PATH.SAN_PHAM,
+    },
+    {
       name: product.name,
-      href: `/san-pham/${product.slug}`,
+      href: `${PATH.SAN_PHAM}/${product.slug}`,
     },
   ];
 
@@ -47,23 +56,31 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
     setQuantity(value);
   }, []);
 
-  const onAddProductToCart = useCallback(() => {
-    const cartAvailable = cart?.products.find(item => item.id === product.id);
-    let _quantity: number = quantity;
+  const onAddProductToCart = useCallback(
+    (callback: TUpdateCartFN) => {
+      const cartAvailable = cart?.products.find(item => item.id === product.id);
+      let _quantity: number = quantity;
 
-    if (cartAvailable) {
-      _quantity += cartAvailable.quantity;
-    }
+      if (cartAvailable) {
+        _quantity += cartAvailable.quantity;
+      }
 
-    updateCart({
-      cartProducts: [
-        {
-          id: product.id,
-          quantity: _quantity,
-        },
-      ],
-    });
-  }, [cart, product, quantity, updateCart]);
+      callback({
+        cartProducts: [
+          {
+            id: product.id,
+            quantity: _quantity,
+          },
+        ],
+      });
+    },
+    [cart, product, quantity]
+  );
+
+  const onBuyNow = useCallback(() => {
+    onAddProductToCart(buyNow);
+    navigate.push(PATH.GIO_HANG);
+  }, [onAddProductToCart, navigate, buyNow]);
 
   return (
     <div className="xl:mx-auto xl:max-w-[1080px]">
@@ -114,18 +131,34 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
               "md:flex-nowrap": isLoading,
             })}
           >
-            <QuantityInput value={quantity} onChange={handleQuantityChange} />
-            <Button
-              className="flex min-h-[40px] items-center whitespace-nowrap rounded-[7px] bg-green-300 px-2 uppercase text-white hover:opacity-75 disabled:cursor-not-allowed"
-              disabled={product.inventory < quantity}
-              onClick={onAddProductToCart}
-            >
-              {isLoading && <FaSpinner className="animate-spin" />}
-              Thêm vào giỏ
-            </Button>
-            <Button className="min-h-[40px] whitespace-nowrap rounded-[7px] bg-red-300 px-2 uppercase text-white hover:opacity-75">
-              Mua ngay
-            </Button>
+            {user ? (
+              <>
+                <QuantityInput value={quantity} onChange={handleQuantityChange} />
+                <Button
+                  className="flex min-h-[40px] items-center whitespace-nowrap rounded-[7px] bg-green-300 px-2 uppercase text-white hover:opacity-75 disabled:cursor-not-allowed"
+                  disabled={product.inventory < quantity}
+                  onClick={() => onAddProductToCart(updateCart)}
+                  isLoading={isLoading}
+                >
+                  Thêm vào giỏ
+                </Button>
+                <Button
+                  className="min-h-[40px] whitespace-nowrap rounded-[7px] bg-red-300 px-2 uppercase text-white hover:opacity-75"
+                  onClick={onBuyNow}
+                  isLoading={isBuyNowLoading}
+                  disabled={product.inventory < quantity}
+                >
+                  Mua ngay
+                </Button>
+              </>
+            ) : (
+              <Link
+                className="flex min-h-[40px] items-center whitespace-nowrap rounded-[7px] bg-red-300 px-2 uppercase text-white hover:opacity-75"
+                href={PATH.DANG_NHAP}
+              >
+                Đăng nhập để mua hàng
+              </Link>
+            )}
           </div>
 
           <div className="mt-6">

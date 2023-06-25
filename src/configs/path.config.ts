@@ -6,4 +6,5 @@ export const PATH = {
   THANH_TOAN: "/thanh-toan",
   DANG_NHAP: "/dang-nhap",
   DANG_KY: "/dang-ky",
+  LICH_SU_MUA_HANG: "/lich-su-mua-hang",
 };
