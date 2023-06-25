@@ -52,6 +52,7 @@ const Payment = () => {
     mutate({
       ...formData,
       products,
+      promotionCode: paymentInfo.promotionCode,
       deliver_option: "none",
     });
   };
