@@ -38,20 +38,8 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
       href: "/",
     },
     {
-      name: "Sản phẩm",
-      href: "/san-pham",
-    },
-    {
-      name: "Tổ Yến",
-      href: "/san-pham/to-yen",
-    },
-    {
-      name: "Tổ Yến Tinh Chế",
-      href: "/san-pham/to-yen/to-yen-tinh-che",
-    },
-    {
-      name: "Hộp 50gr",
-      href: "/san-pham/to-yen/to-yen-tinh-che",
+      name: product.name,
+      href: `/san-pham/${product.slug}`,
     },
   ];
 
@@ -119,6 +107,8 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
             </div>
           )}
 
+          {product.inventory < quantity && <p className="text-sm text-primary-300">Hết hàng</p>}
+
           <div
             className={clsx("mt-3 flex items-stretch gap-2 md:flex-wrap", {
               "md:flex-nowrap": isLoading,
@@ -126,7 +116,7 @@ const ProductDetail: FC<IProductDetailProps> = ({ product }) => {
           >
             <QuantityInput value={quantity} onChange={handleQuantityChange} />
             <Button
-              className="flex min-h-[40px] items-center whitespace-nowrap rounded-[7px] bg-green-300 px-2 uppercase text-white hover:opacity-75"
+              className="flex min-h-[40px] items-center whitespace-nowrap rounded-[7px] bg-green-300 px-2 uppercase text-white hover:opacity-75 disabled:cursor-not-allowed"
               disabled={product.inventory < quantity}
               onClick={onAddProductToCart}
             >
