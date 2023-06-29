@@ -1,7 +1,7 @@
 "use client";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FC, useCallback, useEffect } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Input from "@/components/input";
@@ -20,6 +20,9 @@ interface ICreatePaymentFormProps {
   provinces: TProvince[];
   districts: TDistrict[];
   wards: TWard[];
+  userPoint?: number;
+  pointUsed?: number;
+  onChangePointUsed?: (pointUsed?: number) => void;
 }
 
 const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
@@ -30,6 +33,9 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
     districts,
     onChangeDistrict,
     wards,
+    userPoint = 0,
+    pointUsed,
+    onChangePointUsed,
   } = props;
   const {
     register,
@@ -42,6 +48,8 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
   const provinceWatch = watch("province");
   const districtWatch = watch("district");
 
+  const [isUsePoint, setIsUsePoint] = useState<boolean>(false);
+
   useEffect(() => {
     if (!provinceWatch) return;
     const province = JSON.parse(provinceWatch);
@@ -53,6 +61,12 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
     const district = JSON.parse(districtWatch);
     onChangeDistrict(Number(district.code));
   }, [districtWatch, onChangeDistrict]);
+
+  useEffect(() => {
+    if (!isUsePoint) onChangePointUsed?.(undefined);
+    else onChangePointUsed?.(userPoint);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUsePoint]);
 
   const onSubmit = useCallback(
     (data: TCreatePaymentData) => {
@@ -157,7 +171,37 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
           />
         </div>
       </div>
-
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="use_point"
+            id="use_point"
+            checked={isUsePoint}
+            onChange={e => setIsUsePoint(e.target.checked)}
+          />
+          <label htmlFor="use_point" className="select-none">
+            Bạn đang có <span className="font-semibold">{userPoint} điểm</span> trong tài khoản (1
+            điểm = 1.000đ)
+          </label>
+        </div>
+        {isUsePoint && (
+          <p>
+            Bạn đang sử dụng <span className="font-semibold">{pointUsed || userPoint} điểm</span>
+          </p>
+        )}
+        {isUsePoint && (
+          <input
+            type="range"
+            className="price-range pointer-events-none relative right-0 z-[1] m-0 h-[5px] w-full max-w-[200px] appearance-none rounded-[5px] bg-[#f1f1f1]"
+            min={20}
+            max={userPoint}
+            step={1}
+            defaultValue={userPoint}
+            onChange={e => onChangePointUsed?.(Number(e.target.value))}
+          />
+        )}
+      </div>
       <div>
         <Textarea
           label="Ghi chú"

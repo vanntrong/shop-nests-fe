@@ -6,6 +6,7 @@ import { FC, useRef, useState } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 
 import { PATH } from "@/configs/path.config";
+import { useLogout } from "@/modules/auth/services/useLogout";
 
 import Button from "../button";
 
@@ -16,6 +17,7 @@ interface IDropdownMenuProps {
 const DropdownMenu: FC<IDropdownMenuProps> = ({ username }) => {
   const [isShow, setIsShow] = useState<boolean>(false);
   const containerRef = useRef<HTMLUListElement>(null);
+  const { mutate } = useLogout();
 
   useOnClickOutside(containerRef, () => setIsShow(false));
 
@@ -34,6 +36,9 @@ const DropdownMenu: FC<IDropdownMenuProps> = ({ username }) => {
       name: "Đăng xuất",
       label: "Đăng xuất",
       href: "#",
+      onClick: () => {
+        mutate();
+      },
     },
   ];
 
@@ -77,6 +82,7 @@ const DropdownMenu: FC<IDropdownMenuProps> = ({ username }) => {
             <Link
               className="mb-2 block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-black-900 hover:bg-neutral-100 hover:text-primary active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400"
               href={item.href}
+              onClick={item.onClick}
               data-te-dropdown-item-ref
             >
               {item.label}

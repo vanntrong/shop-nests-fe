@@ -12,6 +12,7 @@ export const createPaymentSchema = yup.object().shape({
   ward: yup.string().required("Phường/Xã bắt buộc"),
   address: yup.string().required("Địa chỉ bắt buộc"),
   note: yup.string(),
+  pointUsed: yup.number().min(0, "Điểm sử dụng không hợp lệ"),
 });
 
 export type TCreatePaymentData = yup.InferType<typeof createPaymentSchema>;

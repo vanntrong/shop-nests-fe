@@ -24,9 +24,18 @@ export interface IPaginationParams {
   limit?: number;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
+  keyword?: string;
 }
 
 export interface IResultResponse<T> {
   message?: string;
   data: T;
 }
+
+export type TSearchParams = {
+  keyword?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  offset?: number;
+  limit?: number;
+};

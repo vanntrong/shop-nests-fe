@@ -10,7 +10,7 @@ import useCountPoint from "@/modules/order/services/useCountPoint";
 import { TProductWithQuantity } from "@/modules/product/types/product.type";
 import { TPaymentInfo } from "@/providers/paymentProvider";
 import { numberToCurrency } from "@/utils/currency";
-import { getPriceAfterSale, numberToVND } from "@/utils/number";
+import { getPriceAfterSale, getReducePoint, numberToVND } from "@/utils/number";
 
 interface IPaymentInfoProps {
   paymentInfo: TPaymentInfo;
@@ -34,10 +34,12 @@ const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
   );
 
   const total = useMemo(() => {
-    if (paymentInfo.totalValueAfterPromotion) return paymentInfo.totalValueAfterPromotion;
+    const totalReduceAfterUsePoint = getReducePoint(paymentInfo.pointUsed);
+    if (paymentInfo.totalValueAfterPromotion)
+      return paymentInfo.totalValueAfterPromotion - totalReduceAfterUsePoint;
 
-    return totalValue;
-  }, [paymentInfo.totalValueAfterPromotion, totalValue]);
+    return totalValue - totalReduceAfterUsePoint;
+  }, [paymentInfo.totalValueAfterPromotion, totalValue, paymentInfo.pointUsed]);
 
   return (
     <div className="pb-7">
@@ -126,6 +128,22 @@ const PaymentInfo: FC<IPaymentInfoProps> = ({ paymentInfo, products }) => {
                     </table>
                   </td>
                 </tr>
+                {(paymentInfo.pointUsed || 0) > 0 && (
+                  <tr>
+                    <td className="py-2" colSpan={2}>
+                      <table className="table-no-border w-full">
+                        <tbody>
+                          <tr>
+                            <th>Điểm thưởng sử dụng</th>
+                            <td data-title="Giao hàng">
+                              <span>{paymentInfo.pointUsed}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                )}
                 {pointEarned > 0 && (
                   <tr>
                     <td className="py-2" colSpan={2}>
