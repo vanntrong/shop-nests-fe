@@ -86,6 +86,7 @@ const Payment = () => {
                   userPoint={user?.point}
                   pointUsed={paymentInfo?.pointUsed}
                   onChangePointUsed={pointUsed => setPaymentInfo?.({ ...paymentInfo, pointUsed })}
+                  user={user}
                 />
               </div>
               <div className="mt-3 lg:basis-1/3">

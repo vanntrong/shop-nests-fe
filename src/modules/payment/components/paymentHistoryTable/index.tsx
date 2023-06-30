@@ -36,6 +36,12 @@ const PaymentHistoryTable: FC<IPaymentHistoryTableProps> = ({ data }) => {
                     THÀNH TIỀN
                   </th>
                   <th scope="col" className="whitespace-nowrap px-3 py-1 text-sm font-medium">
+                    GIẢM GIÁ
+                  </th>
+                  <th scope="col" className="whitespace-nowrap px-3 py-1 text-sm font-medium">
+                    TỔNG CỘNG
+                  </th>
+                  <th scope="col" className="whitespace-nowrap px-3 py-1 text-sm font-medium">
                     NGÀY ĐẶT
                   </th>
                   <th scope="col" className="whitespace-nowrap px-3 py-1 text-sm font-medium">
@@ -92,6 +98,22 @@ const PaymentHistoryTable: FC<IPaymentHistoryTableProps> = ({ data }) => {
                             {numberToVND(orderProduct.price * orderProduct.quantity)}
                           </span>
                         ))}
+                      </div>
+                    </td>
+                    <td className="h-[1px]">
+                      <div className="flex h-full flex-col items-center justify-around whitespace-nowrap px-3 py-2 text-sm font-medium">
+                        {[...new Array(order.orderProducts.length - 1)].map((_, index) => (
+                          <span key={`${index}-reduce`}>&nbsp;</span>
+                        ))}
+                        <span>{numberToVND(order.value - order.actualValue)}</span>
+                      </div>
+                    </td>
+                    <td className="h-[1px]">
+                      <div className="flex h-full flex-col items-center justify-around whitespace-nowrap px-3 py-2 text-sm font-medium">
+                        {[...new Array(order.orderProducts.length - 1)].map((_, index) => (
+                          <span key={`${index}-actualValue`}>&nbsp;</span>
+                        ))}
+                        <span>{numberToVND(order.actualValue)}</span>
                       </div>
                     </td>
                     <td className="h-[1px]">

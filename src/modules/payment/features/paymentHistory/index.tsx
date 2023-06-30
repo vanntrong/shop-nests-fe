@@ -7,8 +7,6 @@ import PaymentHistoryTable from "../../components/paymentHistoryTable";
 const PaymentHistory = () => {
   const { data } = useGetMyOrder();
 
-  console.log(data);
-
   return (
     <div className="xl:mx-auto xl:max-w-[1080px]">
       <div className="px-4 pt-4">

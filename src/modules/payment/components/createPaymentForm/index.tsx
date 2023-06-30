@@ -12,6 +12,7 @@ import {
   createPaymentSchema,
 } from "@/modules/payment/validations/createPayment";
 import { TDistrict, TProvince, TWard } from "@/modules/province/types/province.type";
+import { TUser } from "@/types/user";
 
 interface ICreatePaymentFormProps {
   onSubmit: (data: TCreatePaymentData) => void;
@@ -23,6 +24,7 @@ interface ICreatePaymentFormProps {
   userPoint?: number;
   pointUsed?: number;
   onChangePointUsed?: (pointUsed?: number) => void;
+  user?: TUser;
 }
 
 const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
@@ -36,6 +38,7 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
     userPoint = 0,
     pointUsed,
     onChangePointUsed,
+    user,
   } = props;
   const {
     register,
@@ -44,6 +47,10 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
     formState: { errors },
   } = useForm<TCreatePaymentData>({
     resolver: yupResolver(createPaymentSchema),
+    defaultValues: {
+      ...user,
+      phone: user?.phone.replace("+84", "0"),
+    },
   });
   const provinceWatch = watch("province");
   const districtWatch = watch("district");
@@ -171,37 +178,39 @@ const CreatePaymentForm: FC<ICreatePaymentFormProps> = props => {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="use_point"
-            id="use_point"
-            checked={isUsePoint}
-            onChange={e => setIsUsePoint(e.target.checked)}
-          />
-          <label htmlFor="use_point" className="select-none">
-            Bạn đang có <span className="font-semibold">{userPoint} điểm</span> trong tài khoản (1
-            điểm = 1.000đ)
-          </label>
+      {userPoint > 20 && (
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="use_point"
+              id="use_point"
+              checked={isUsePoint}
+              onChange={e => setIsUsePoint(e.target.checked)}
+            />
+            <label htmlFor="use_point" className="select-none">
+              Bạn đang có <span className="font-semibold">{userPoint} điểm</span> trong tài khoản (1
+              điểm = 1.000đ)
+            </label>
+          </div>
+          {isUsePoint && (
+            <p>
+              Bạn đang sử dụng <span className="font-semibold">{pointUsed || userPoint} điểm</span>
+            </p>
+          )}
+          {isUsePoint && (
+            <input
+              type="range"
+              className="price-range pointer-events-none relative right-0 z-[1] m-0 h-[5px] w-full max-w-[200px] appearance-none rounded-[5px] bg-[#f1f1f1]"
+              min={20}
+              max={userPoint}
+              step={1}
+              defaultValue={userPoint}
+              onChange={e => onChangePointUsed?.(Number(e.target.value))}
+            />
+          )}
         </div>
-        {isUsePoint && (
-          <p>
-            Bạn đang sử dụng <span className="font-semibold">{pointUsed || userPoint} điểm</span>
-          </p>
-        )}
-        {isUsePoint && (
-          <input
-            type="range"
-            className="price-range pointer-events-none relative right-0 z-[1] m-0 h-[5px] w-full max-w-[200px] appearance-none rounded-[5px] bg-[#f1f1f1]"
-            min={20}
-            max={userPoint}
-            step={1}
-            defaultValue={userPoint}
-            onChange={e => onChangePointUsed?.(Number(e.target.value))}
-          />
-        )}
-      </div>
+      )}
       <div>
         <Textarea
           label="Ghi chú"
