@@ -6,6 +6,7 @@ export type TPaymentInfo = {
   totalValue?: number;
   totalValueAfterPromotion?: number;
   promotionCode?: string;
+  pointUsed?: number;
   isFreeShip?: boolean;
 };
 

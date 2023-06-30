@@ -21,13 +21,17 @@ interface IFilterPriceProps {
   minPrice?: number;
   maxPrice?: number;
   onChange?: (minPrice: number, maxPrice: number) => void;
+  value?: {
+    minPrice?: number;
+    maxPrice?: number;
+  };
 }
 
 const FilterPrice: FC<IFilterPriceProps> = props => {
-  const { minPrice: _minPrice = 10000, maxPrice: _maxPrice = 5000000, onChange } = props;
+  const { minPrice: _minPrice = 10000, maxPrice: _maxPrice = 5000000, onChange, value } = props;
 
-  const [minPrice, setMinPrice] = useState<number>(_minPrice);
-  const [maxPrice, setMaxPrice] = useState<number>(_maxPrice);
+  const [minPrice, setMinPrice] = useState<number>(value?.minPrice ?? _minPrice);
+  const [maxPrice, setMaxPrice] = useState<number>(value?.maxPrice ?? _maxPrice);
   const [badgePosition, setBadgePosition] = useState<TBadge>(
     getBadgePosition(minPrice, maxPrice, _maxPrice)
   );

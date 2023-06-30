@@ -14,10 +14,12 @@ import useGetProvince from "@/modules/province/services/useGetCity";
 import useGetDistricts from "@/modules/province/services/useGetDistrict";
 import useGetWards from "@/modules/province/services/useGetWards";
 import { useAppContext } from "@/providers/appProvider";
+import { useAuthContext } from "@/providers/authProvider";
 import { usePaymentContext } from "@/providers/paymentProvider";
 
 const Payment = () => {
   const { cart } = useAppContext();
+  const { user } = useAuthContext();
   const { paymentInfo, setPaymentInfo } = usePaymentContext();
   const { data: { data: provinces } = {} } = useGetProvince();
   const [province, setProvince] = useState<number>();
@@ -54,6 +56,7 @@ const Payment = () => {
       products,
       promotionCode: paymentInfo.promotionCode,
       deliver_option: "none",
+      pointUsed: paymentInfo.pointUsed,
     });
   };
 
@@ -80,6 +83,9 @@ const Payment = () => {
                   wards={wards ?? []}
                   onChangeProvince={provinceCode => setProvince(provinceCode)}
                   onChangeDistrict={districtCode => setDistrict(districtCode)}
+                  userPoint={user?.point}
+                  pointUsed={paymentInfo?.pointUsed}
+                  onChangePointUsed={pointUsed => setPaymentInfo?.({ ...paymentInfo, pointUsed })}
                 />
               </div>
               <div className="mt-3 lg:basis-1/3">

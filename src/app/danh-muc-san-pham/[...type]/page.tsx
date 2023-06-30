@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { getCategory } from "@/apis/category/getCategory";
 import { getAllProducts } from "@/apis/product/getAllProducts";
 import Products from "@/modules/product/features/products";
+import { TSearchParams } from "@/types/common";
 import { getMetaData } from "@/utils/metadata";
 
 type TParamsProductType = {
@@ -11,6 +12,7 @@ type TParamsProductType = {
 
 export interface IProductsPageProps {
   params: TParamsProductType;
+  searchParams: TSearchParams;
 }
 
 export function generateMetadata(): Metadata {
@@ -20,11 +22,13 @@ export function generateMetadata(): Metadata {
   });
 }
 
-const Index = async ({ params }: IProductsPageProps) => {
+const Index = async ({ params, searchParams }: IProductsPageProps) => {
   const categorySlug = params.type.pop();
   const { data: category } = await getCategory(categorySlug ?? "");
+
   const products = await getAllProducts({
     category: categorySlug,
+    ...searchParams,
   });
 
   return <Products category={category} products={products} />;

@@ -40,8 +40,8 @@ const Footer = () => {
             <strong>100% YẾN SÀO NGUYÊN CHẤT</strong>&nbsp;và <strong>KHÔNG PHA, TẨM ĐƯỜNG</strong>.
           </h2>
         </div>
-        <div className="bg-primary px-2 pt-4 sm:pt-8 lg:flex lg:gap-20">
-          <div className="lg:flex-1">
+        <div className="bg-primary px-2 pt-4 sm:pt-8 lg:flex lg:justify-center lg:gap-20">
+          <div className="lg:w-2/5">
             <Image src={"/logo.svg"} alt="abc" width={167} height={83} className="mx-auto" />
             <p className="mt-4 text-center text-sm leading-[1.5] text-white">
               Điều đặc biệt làm nên và chỉ có duy nhất ở Yến Vàng là khách hàng không còn phải đau
@@ -53,7 +53,7 @@ const Footer = () => {
             </h2>
           </div>
 
-          <div className="mt-8 lg:flex-1">
+          <div className="mt-8">
             <h2 className="text-lg font-normal uppercase text-white">thông tin liên hệ</h2>
             <div className="my-3 h-[2px] w-8 bg-gray-100"></div>
             <div className="flex flex-col">

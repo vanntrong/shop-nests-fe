@@ -1,9 +1,14 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 import { BiMenu } from "react-icons/bi";
 import { BsCart4 } from "react-icons/bs";
 
 import Logo from "@/components/logo";
 import { BRAND_SERVICES } from "@/configs/header.config";
+import { PATH } from "@/configs/path.config";
 
 import Button from "../button";
 import InputSearch from "../inputSearch";
@@ -11,6 +16,16 @@ import InputSearch from "../inputSearch";
 import Navigation from "./navigation";
 
 const Header = () => {
+  const navigate = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleSearch = useCallback(
+    (value: string) => {
+      navigate.push(PATH.SAN_PHAM + "?keyword=" + value);
+    },
+    [navigate]
+  );
+
   return (
     <header>
       <div className="flex items-center justify-center bg-yellow py-2 xl:px-12">
@@ -28,7 +43,11 @@ const Header = () => {
           </div>
 
           <div className="flex items-center">
-            <InputSearch placeholder="Tìm kiếm..." />
+            <InputSearch
+              placeholder="Tìm kiếm..."
+              onSearch={handleSearch}
+              defaultValue={searchParams.get("keyword") || ""}
+            />
             <Button className="lg:hidden">
               <BsCart4 color="white" size={20} />
             </Button>

@@ -1,6 +1,8 @@
 import dayjs from "dayjs";
 import { isNil } from "lodash";
 
+import { POINT_TO_MONEY } from "@/configs/app.config";
+
 export const numberToVND = (number: number) => {
   return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(number);
 };
@@ -17,4 +19,9 @@ export const getPriceAfterSale = (price: number, sale?: number | null, saleEnd?:
   }
 
   return price;
+};
+
+export const getReducePoint = (point?: number) => {
+  if (point) return point * POINT_TO_MONEY;
+  return 0;
 };

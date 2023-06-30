@@ -1,6 +1,7 @@
 "use client";
 
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { FC, useCallback, useLayoutEffect, useMemo } from "react";
 import { IoFilter } from "react-icons/io5";
 
 import { TGetAllProductsParams } from "@/apis/product/getAllProducts";
@@ -10,6 +11,7 @@ import FilterPrice from "@/components/filterPrice";
 import Pagination from "@/components/pagination";
 import Sidebar from "@/components/sidebar";
 import { PATH } from "@/configs/path.config";
+import useReflectionSearchParams from "@/hooks/useReflectionSearchParams";
 import ProductCard from "@/modules/product/components/productCard";
 import useGetProducts from "@/modules/product/services/useGetProducts";
 import { TProduct } from "@/modules/product/types/product.type";
@@ -23,14 +25,20 @@ interface IProductsProps {
 }
 
 const Products: FC<IProductsProps> = ({ category, products, defaultBreadcrumb }) => {
-  const [params, setParams] = useState<TGetAllProductsParams>({
+  const searchParams = useSearchParams();
+
+  const [params, setParams] = useReflectionSearchParams<TGetAllProductsParams>({
     category: category?.slug,
     offset: 0,
     limit: 10,
+    keyword: searchParams.get("keyword") ?? undefined,
   });
+
   const { data } = useGetProducts(params, {
     initialData: products,
   });
+
+  const currentPage = params.offset ? Number(params.offset) / (Number(params.limit) || 10) : 0;
 
   const breadcrumbData = useMemo(
     () =>
@@ -63,9 +71,10 @@ const Products: FC<IProductsProps> = ({ category, products, defaultBreadcrumb })
     [breadcrumbData]
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (category) getParentCategory(category);
-  }, [category, getParentCategory]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="xl:mx-auto xl:max-w-[1080px]">
@@ -88,10 +97,17 @@ const Products: FC<IProductsProps> = ({ category, products, defaultBreadcrumb })
             <div className="h-[2px] w-[30px] bg-black-900"></div>
             <FilterPrice
               onChange={(min, max) =>
-                setParams(prev => ({ ...prev, min_price: min, max_price: max }))
+                setParams({
+                  min_price: min,
+                  max_price: max,
+                })
               }
               minPrice={10000}
               maxPrice={100000000}
+              value={{
+                minPrice: params.min_price ? Number(params.min_price) : undefined,
+                maxPrice: params.max_price ? Number(params.max_price) : undefined,
+              }}
             />
           </div>
 
@@ -124,11 +140,11 @@ const Products: FC<IProductsProps> = ({ category, products, defaultBreadcrumb })
                 <Pagination
                   pageCount={Math.ceil(data.total / data.limit)}
                   onPageChange={event => {
-                    setParams(prev => ({
-                      ...prev,
-                      offset: event.selected * (params.limit || 10),
-                    }));
+                    setParams({
+                      offset: event.selected * (Number(params.limit) || 10),
+                    });
                   }}
+                  forcePage={currentPage}
                 />
               </div>
             )}

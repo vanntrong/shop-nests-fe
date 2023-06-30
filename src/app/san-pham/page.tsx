@@ -11,8 +11,10 @@ export const metadata: Metadata = getMetaData({
   description: "Sản phẩm",
 });
 
-const Index = async () => {
-  const products = await getAllProducts({});
+const Index = async ({ searchParams }: { searchParams: { keyword?: string } }) => {
+  const products = await getAllProducts({
+    ...searchParams,
+  });
   return (
     <Products
       products={products}
