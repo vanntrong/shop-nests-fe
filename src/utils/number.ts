@@ -8,7 +8,7 @@ export const numberToVND = (number: number) => {
 };
 
 export const calculateSale = (price: number, sale: number) => {
-  return ((price - sale) / price) * 100;
+  return (((price - sale) / price) * 100).toFixed(2);
 };
 
 export const getPriceAfterSale = (price: number, sale?: number | null, saleEnd?: string | null) => {
